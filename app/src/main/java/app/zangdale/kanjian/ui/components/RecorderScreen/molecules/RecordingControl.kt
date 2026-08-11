@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -95,29 +94,21 @@ fun RecordingControl(
 
     when (orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
                 modifier = modifier,
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(saveButtonAlpha),
                     contentAlignment = Alignment.Center,
+                    modifier = Modifier.alpha(deleteButtonAlpha),
                 ) {
-                    SaveButton(
-                        onSave = onSaveAndStop,
-                        onLongClick = onSaveCurrent,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    DeleteButton(onDelete = onDelete)
                 }
 
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(pauseButtonAlpha),
                     contentAlignment = Alignment.Center,
+                    modifier = Modifier.alpha(pauseButtonAlpha),
                 ) {
                     PauseResumeButton(
                         isPaused = isPaused,
@@ -126,14 +117,12 @@ fun RecordingControl(
                 }
 
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(deleteButtonAlpha),
                     contentAlignment = Alignment.Center,
+                    modifier = Modifier.alpha(saveButtonAlpha),
                 ) {
-                    DeleteButton(
-                        onDelete = onDelete,
-                        modifier = Modifier.fillMaxWidth(),
+                    SaveButton(
+                        onSave = onSaveAndStop,
+                        onLongClick = onSaveCurrent,
                     )
                 }
             }

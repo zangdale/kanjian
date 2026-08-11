@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -74,15 +73,14 @@ fun VideoRecordingStatus(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth(0.9f)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        verticalArrangement = Arrangement
-                            .spacedBy(32.dp),
+                        verticalArrangement = Arrangement.spacedBy(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         _VideoControls(videoRecorder)
-                        HorizontalDivider()
                         _PrimitiveControls(videoRecorder)
                     }
                 }
@@ -93,7 +91,7 @@ fun VideoRecordingStatus(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 32.dp),
+                    .padding(bottom = 72.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
@@ -114,7 +112,6 @@ fun VideoRecordingStatus(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     _VideoControls(videoRecorder)
-                    HorizontalDivider()
                     _PrimitiveControls(videoRecorder)
                 }
             }
@@ -212,7 +209,6 @@ fun _PrimitiveControls(videoRecorder: VideoRecorderModel) {
     }
 
     RecordingControl(
-        orientation = Configuration.ORIENTATION_PORTRAIT,
         // There may be some edge cases where the app may crash if the
         // user stops or pauses the recording too soon, so we simply add a
         // small delay to prevent that

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,7 +51,7 @@ fun AudioRecordingStatus(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 32.dp),
+            .padding(bottom = 72.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -89,7 +88,8 @@ fun AudioRecordingStatus(
                     }
 
                     Box(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center,
                     ) {
                         _PrimitiveControls(audioRecorder)
                     }
@@ -106,13 +106,10 @@ fun AudioRecordingStatus(
 
                 Column(
                     verticalArrangement = Arrangement
-                        .spacedBy(32.dp),
+                        .spacedBy(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     MicrophoneStatus(audioRecorder)
-
-                    HorizontalDivider()
-
                     _PrimitiveControls(audioRecorder)
                 }
             }
