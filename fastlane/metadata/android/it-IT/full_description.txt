@@ -1,0 +1,1 @@
+<p>Kanjian mantiene la registrazione in background e salva gli ultimi 30 minuti su richiesta.</p><p>Tutto è completamente configurabile. Nessuna connessione internet richiesta.</p>

@@ -1,0 +1,52 @@
+name: Build and publish app
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  release-app-github:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: gradle/wrapper-validation-action@v2
+
+      - name: Write KeyStore 🗝️
+        uses: ./.github/actions/prepare-keystore
+        with:
+          signingStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          signingKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          signingKeyAlias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          keyStoreBase64: ${{ secrets.KEYSTORE }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: 21
+          cache: 'gradle'
+
+      - name: Build APKs 📱
+        run: ./gradlew assembleRelease
+
+      - name: Upload APKs 🚀
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          files: app/build/outputs/apk/release/*.apk
+
+      - name: Build AABs 📱
+        run: ./gradlew bundleRelease
+
+      - name: Upload APKs bundles 🚀
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          files: app/build/outputs/bundle/release/*.aab

@@ -1,0 +1,63 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="250dp"
+    android:height="250dp"
+    android:viewportWidth="250"
+    android:viewportHeight="250">
+    <!-- Eye outline -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M68,125C68,100 96,90 118,125C96,160 68,150 68,125Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="8" />
+    <!-- Pupil -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M118,111A14,14 0,1 1 117.9,111"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="8" />
+    <!-- Pupil highlight -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M123,120m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    <!-- Signal waves - top -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M136,120Q150,108 164,102"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M136,114Q154,96 176,86"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M136,108Q158,84 186,72"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <!-- Signal waves - bottom -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M136,130Q150,142 164,148"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M136,136Q154,154 176,164"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M136,142Q158,166 186,178"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="7" />
+</vector>

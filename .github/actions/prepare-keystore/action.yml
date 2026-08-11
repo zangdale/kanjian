@@ -1,0 +1,31 @@
+name: Prepare KeyStore
+description: Write the KeyStore file and properties to disk
+
+inputs:
+  signingStorePassword:
+    description: 'The password for the KeyStore'
+    required: true
+  signingKeyPassword:
+    description: 'The password for the Key'
+    required: true
+  signingKeyAlias:
+    description: 'The alias for the Key'
+    required: true
+  keyStoreBase64:
+    description: 'The KeyStore file encoded as base64'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Write Keystore file 🗄️
+      shell: bash
+      run: echo "${{ inputs.keyStoreBase64 }}" | base64 -d > /home/runner/key.jks
+
+    - name: Write Keystore properties 🗝️
+      shell: bash
+      run: |
+        echo "storeFile=/home/runner/key.jks" > key.properties
+        echo "storePassword=${{ inputs.signingStorePassword }}" >> key.properties
+        echo "keyPassword=${{ inputs.signingKeyPassword }}" >> key.properties
+        echo "keyAlias=${{ inputs.signingKeyAlias }}" >> key.properties
