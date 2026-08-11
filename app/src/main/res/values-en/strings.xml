@@ -26,9 +26,9 @@
     <string name="ui_recorder_action_save_label">Save</string>
     <string name="ui_recorder_action_save_success">Recording has been saved successfully!</string>
     <string name="ui_recorder_action_save_openFolder">Open</string>
-    <string name="ui_recorder_action_start_description_1">Kanjian will continue recording in the background and store the last\u0020</string>
-    <string name="ui_recorder_action_start_description_2"><xliff:g name="durationInMinutes">%s</xliff:g> minutes</string>
-    <string name="ui_recorder_action_start_description_3">\u0020at your request</string>
+    <string name="ui_recorder_action_start_description_1">Kanjian will continue recording in the background and keep the latest\u0020</string>
+    <string name="ui_recorder_action_start_description_2"><xliff:g name="segmentCount">%s</xliff:g> segments</string>
+    <string name="ui_recorder_action_start_description_3">\u0020, overwriting the oldest when the limit is reached</string>
     <string name="ui_recorder_action_save_processing_dialog_title">Processing</string>
     <string name="ui_recorder_action_save_processing_dialog_description">Processing your recording, do not close Kanjian! You will automatically be prompted to save the file once it\'s ready. This process may take a few minutes if your time frame is big. Once this is finished and you are asked to save the file, please do so and then wait until you see Kanjian\'s main screen again.</string>
     <string name="ui_recorder_state_recording_description">Kanjian keeps recording in the background</string>
@@ -49,10 +49,12 @@
     <string name="ui_settings_advancedSettings_label">Advanced Settings</string>
     <string name="ui_settings_hint_recordingActive_title">You are recording</string>
     <string name="ui_settings_hint_recordingActive_message">Your changes will be applied the next time you start recording</string>
-    <string name="ui_settings_option_maxDuration_title">Max duration</string>
-    <string name="ui_settings_option_maxDuration_description">Set the maximum duration of the recording</string>
-    <string name="ui_settings_option_intervalDuration_title">Batch duration</string>
-    <string name="ui_settings_option_intervalDuration_description">Record a single batch for this duration. Kanjian records multiple batches and deletes the oldest one. When exporting the recording, all batches will be merged together</string>
+    <string name="ui_settings_option_maxDuration_title">Max segments</string>
+    <string name="ui_settings_option_maxDuration_description">Keep only this many segments. When the limit is reached, the oldest segment is overwritten.</string>
+    <string name="ui_settings_option_maxDuration_explanation">How many segments to keep</string>
+    <string name="ui_settings_option_maxDuration_value"><xliff:g name="count">%d</xliff:g> segments</string>
+    <string name="ui_settings_option_intervalDuration_title">Auto-save interval</string>
+    <string name="ui_settings_option_intervalDuration_description">Automatically save a segment at this interval. When the max segment count is reached, the oldest segment is overwritten.</string>
     <string name="ui_settings_option_bitrate_title">Bitrate</string>
     <string name="ui_settings_option_bitrate_description">A higher bitrate means better quality but also larger file size</string>
     <string name="ui_settings_option_bitrate_explanation">Set the bitrate for the audio recording</string>
@@ -106,8 +108,10 @@
     <string name="ui_about_contribute_donation_githubSponsors">Become a GitHub Sponsor</string>
     <string name="ui_settings_option_deleteRecordingsImmediately_title">Delete Recordings Immediately</string>
     <string name="ui_settings_option_deleteRecordingsImmediately_description">If enabled, Kanjian will immediately delete recordings after you have saved the file.</string>
-    <string name="ui_settings_option_saveFolder_title">Batches folder</string>
-    <string name="ui_settings_option_saveFolder_explanation">Where Kanjian should store the temporary batches of your recordings.</string>
+    <string name="ui_settings_option_recorderSounds_title">Recorder Sounds</string>
+    <string name="ui_settings_option_recorderSounds_description">Play a short sound when recording starts, pauses, stops, or when a segment is saved.</string>
+    <string name="ui_settings_option_saveFolder_title">Auto-save folder</string>
+    <string name="ui_settings_option_saveFolder_explanation">Where Kanjian should automatically save each recording segment. Every interval is kept permanently and named by its start time.</string>
     <string name="ui_settings_option_saveFolder_action_select_label">Select</string>
     <string name="ui_settings_option_saveFolder_defaultValue">Encrypted Internal Storage</string>
     <string name="ui_settings_option_saveFolder_warning_title">Are you sure you want to change the folder?</string>
@@ -145,7 +149,7 @@
     <string name="ui_videoRecorder_action_torch_off">Disable Torch</string>
     <string name="ui_videoRecorder_action_torch_on">Enable Torch</string>
     <string name="ui_videoRecorder_action_configure_label">Press long for configuration</string>
-    <string name="ui_recorder_action_changeMaxDuration_title">When stopped, save the last...</string>
+    <string name="ui_recorder_action_changeMaxDuration_title">Keep at most...</string>
     <string name="ui_recorder_info_startTime_short">Recording started at %s</string>
     <string name="ui_recorder_info_startTime_full">Recording started %s</string>
     <string name="ui_recorder_info_saveNowTime">Press to save from %s till now</string>
@@ -183,22 +187,22 @@
     <string name="ui_recorder_action_saveCurrent_explanation">You can save the current ongoing recording by pressing and holding down on the save button. The recording will continue in the background.</string>
     <string name="ui_recorder_lowOnStorage_hint">You are low on storage. Kanjian may not function properly. Please free up some space.</string>
     <string name="ui_recorder_lowOnStorage_hintANDswitchSaveFolder">You are low on storage. Kanjian may not function properly. Please free up some space. Alternatively, change the batches folder to a different location in the settings.</string>
-    <string name="ui_welcome_timeSettings_title">How long should Kanjian remember?</string>
-    <string name="ui_welcome_timeSettings_message">Kanjian will continuously record and delete old recordings to make space for new ones. You decide how long Kanjian should remember the past.</string>
+    <string name="ui_welcome_timeSettings_title">How many segments should Kanjian keep?</string>
+    <string name="ui_welcome_timeSettings_message">Kanjian saves each segment automatically. When the limit is reached, the oldest segment is overwritten so recording can continue.</string>
     <string name="ui_welcome_timeSettings_values_5min">5 Minutes</string>
     <string name="ui_welcome_timeSettings_values_15min">15 minutes</string>
     <string name="ui_welcome_timeSettings_values_30min">30 minutes</string>
     <string name="ui_welcome_timeSettings_values_1hour">1 hour</string>
     <string name="ui_welcome_timeSettings_changeableHint">You can change this anytime</string>
-    <string name="ui_welcome_saveFolder_title">Where should Kanjian store the batches?</string>
-    <string name="ui_welcome_saveFolder_message">Select where you would like to let Kanjian store the batches of the ongoing recordings. The internal folder is encrypted and only accessible by Kanjian. This folder is recommended if you only want to record a small time frame. If you need a longer time frame, you will most likely need to select a different folder, as the internal storage is very limited.</string>
+    <string name="ui_welcome_saveFolder_title">Where should Kanjian auto-save recordings?</string>
+    <string name="ui_welcome_saveFolder_message">Each recording interval is permanently saved to the selected folder and named by its start time. Choose the media folder or a custom folder.</string>
     <string name="ui_welcome_saveFolder_values_internal">Internal Storage</string>
     <string name="ui_welcome_saveFolder_values_custom">Custom Folder</string>
     <string name="ui_welcome_saveFolder_values_media">Media Folder</string>
-    <string name="ui_welcome_saveFolder_externalRequired">Please select either the Media Folder or a Custom Folder. Kanjian has not enough space to store the batches in the internal storage. Alternatively, go back one step and select a shorter duration.</string>
+    <string name="ui_welcome_saveFolder_externalRequired">Please select either the Media Folder or a Custom Folder.</string>
     <string name="ui_welcome_saveFolder_customFolder_title">Select a Custom Folder</string>
-    <string name="ui_welcome_saveFolder_customFolder_message">You will now be asked to select a folder where Kanjian should store the batches. Please select a folder where you have write access to.</string>
-    <string name="ui_welcome_timeSettings_values_custom">Custom Duration</string>
+    <string name="ui_welcome_saveFolder_customFolder_message">You will now be asked to select a folder where Kanjian should auto-save each recording segment. Please select a folder where you have write access to.</string>
+    <string name="ui_welcome_timeSettings_values_custom">Custom count</string>
     <string name="ui_welcome_timeSettings_values_customFormat_mm">%s minutes</string>
     <string name="ui_welcome_timeSettings_values_customFormat_hh_mm">%s hour, %s minutes</string>
     <string name="ui_welcome_timeSettings_values_customFormat_h_mm">1 hour, %s minutes</string>

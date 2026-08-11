@@ -26,9 +26,9 @@
     <string name="ui_recorder_action_save_label">保存​​</string>
     <string name="ui_recorder_action_save_success">您的录制已成功保存！</string>
     <string name="ui_recorder_action_save_openFolder">打开</string>
-    <string name="ui_recorder_action_start_description_1">Kanjian 将在后台持续工作，并按您的要求保存最近\u0020</string>
-    <string name="ui_recorder_action_start_description_2"><xliff:g name="durationInMinutes">%s</xliff:g> 分钟</string>
-    <string name="ui_recorder_action_start_description_3">\u0020的录制文件</string>
+    <string name="ui_recorder_action_start_description_1">Kanjian 将在后台持续录制，并最多保留最近\u0020</string>
+    <string name="ui_recorder_action_start_description_2"><xliff:g name="segmentCount">%s</xliff:g> 个片段</string>
+    <string name="ui_recorder_action_start_description_3">\u0020；超出后会覆盖最旧的片段</string>
     <string name="ui_recorder_action_save_processing_dialog_title">处理中</string>
     <string name="ui_recorder_action_save_processing_dialog_description">正在处理您的录制，不要关闭Kanjian！一旦准备就绪，将会自动提示您保存文件。 如果您录制的时间较长，此过程可能需要几分钟。 一旦完成将要求您保存该文件，请先保存，然后稍等片刻，直到您再次看到Kanjian的主屏幕为止。</string>
     <string name="ui_recorder_state_recording_description">Kanjian 将在后台继续录制</string>
@@ -49,10 +49,12 @@
     <string name="ui_settings_advancedSettings_label">高级设置</string>
     <string name="ui_settings_hint_recordingActive_title">您正在录制中</string>
     <string name="ui_settings_hint_recordingActive_message">您的更改将在下次启动录制时被应用</string>
-    <string name="ui_settings_option_maxDuration_title">最大时长</string>
-    <string name="ui_settings_option_maxDuration_description">设置录制的最大持续时间</string>
-    <string name="ui_settings_option_intervalDuration_title">片段时长</string>
-    <string name="ui_settings_option_intervalDuration_description">按照指定的时长录制一个单独的片段。Kanjian 会录制多个片段并删除最旧的片段。导出录制时，会把所有片段合并后导出。</string>
+    <string name="ui_settings_option_maxDuration_title">最大片段数</string>
+    <string name="ui_settings_option_maxDuration_description">最多保留这么多个片段。达到上限后，会覆盖最旧的片段继续循环保存。</string>
+    <string name="ui_settings_option_maxDuration_explanation">要保留的片段个数</string>
+    <string name="ui_settings_option_maxDuration_value"><xliff:g name="count">%d</xliff:g> 个片段</string>
+    <string name="ui_settings_option_intervalDuration_title">自动保存间隔</string>
+    <string name="ui_settings_option_intervalDuration_description">每隔这段时间自动保存一次。达到最大片段数后，会覆盖最旧的片段。</string>
     <string name="ui_settings_option_bitrate_title">比特率</string>
     <string name="ui_settings_option_bitrate_description">更高的比特率意味着更好的录制质量以及更大的储存空间占用</string>
     <string name="ui_settings_option_bitrate_explanation">为音频录制设置比特率</string>
@@ -106,8 +108,10 @@
     <string name="ui_about_contribute_donation_githubSponsors">成为 GitHub 赞助者</string>
     <string name="ui_settings_option_deleteRecordingsImmediately_title">即时删除片段文件</string>
     <string name="ui_settings_option_deleteRecordingsImmediately_description">如果启用，Kanjian 将在保存文件后立即删除录制的片段文件。</string>
-    <string name="ui_settings_option_saveFolder_title">片段文件夹</string>
-    <string name="ui_settings_option_saveFolder_explanation">您希望 Kanjian 将临时录制的片段文件存放在哪儿</string>
+    <string name="ui_settings_option_recorderSounds_title">录制提示音</string>
+    <string name="ui_settings_option_recorderSounds_description">开始、暂停、停止录制，以及片段保存完成时播放短提示音。</string>
+    <string name="ui_settings_option_saveFolder_title">自动保存目录</string>
+    <string name="ui_settings_option_saveFolder_explanation">Kanjian 会把每个录制时间段自动永久保存到此目录，文件名使用该段开始时间。</string>
     <string name="ui_settings_option_saveFolder_action_select_label">选择</string>
     <string name="ui_settings_option_saveFolder_defaultValue">加密的内部存储</string>
     <string name="ui_settings_option_saveFolder_warning_title">您确定要更改文件夹吗？</string>
@@ -127,10 +131,10 @@
     <string name="ui_settings_option_videoTargetedFrameRate_explanation">实际帧率可能不同。例如，当设备无法以指定帧率录制时可能会发生这种情况。</string>
     <string name="ui_settings_option_videoQualityTile_title">质量</string>
     <string name="ui_settings_option_videoWatermark_title">视频水印</string>
-    <string name="ui_settings_option_videoWatermark_description">在保存的视频中嵌入日期、时间和可选的 GPS 坐标。</string>
+    <string name="ui_settings_option_videoWatermark_description">录制时实时叠加日期、时间和可选的 GPS 坐标。</string>
     <string name="ui_settings_option_videoWatermarkLocation_title">包含 GPS 坐标</string>
-    <string name="ui_settings_option_videoWatermarkLocation_description">在水印中显示经纬度坐标。</string>
-    <string name="ui_settings_option_videoWatermark_hint">水印在保存视频时添加。启用后可能会增加处理时间。</string>
+    <string name="ui_settings_option_videoWatermarkLocation_description">在水印中实时显示经纬度坐标。</string>
+    <string name="ui_settings_option_videoWatermark_hint">水印会在录制过程中实时烧录进视频画面。</string>
     <string name="ui_settings_value_videoQuality_values_highest">最高</string>
     <string name="ui_settings_value_videoQuality_values_uhd">超高清</string>
     <string name="ui_settings_value_videoQuality_values_fhd">全高清</string>
@@ -150,7 +154,7 @@
     <string name="ui_videoRecorder_action_torch_off">禁用手电筒</string>
     <string name="ui_videoRecorder_action_torch_on">启用手电筒</string>
     <string name="ui_videoRecorder_action_configure_label">长按进行配置</string>
-    <string name="ui_recorder_action_changeMaxDuration_title">停止时，保存最后...</string>
+    <string name="ui_recorder_action_changeMaxDuration_title">最多保留...</string>
     <string name="ui_recorder_info_startTime_short">录制开始于 %s</string>
     <string name="ui_recorder_info_startTime_full">录制开始于 %s</string>
     <string name="ui_recorder_info_saveNowTime">按下保存（从 %s 到现在）</string>
@@ -188,22 +192,22 @@
     <string name="ui_recorder_action_saveCurrent_explanation">您可以通过按下保存按钮来保存当前正在进行的录制。录制将继续在后台进行。</string>
     <string name="ui_recorder_lowOnStorage_hint">您的存储空间值很低。Kanjian 可能无法正常工作。请释放一些空间。</string>
     <string name="ui_recorder_lowOnStorage_hintANDswitchSaveFolder">您的存储空间值很低。Kanjian 可能无法正常工作。请释放一些空间，或者在设置中将片段文件夹更改为其他位置。</string>
-    <string name="ui_welcome_timeSettings_title">Kanjian 将保留多长时间？</string>
-    <string name="ui_welcome_timeSettings_message">Kanjian 将不断录制并删除旧的录制文件以为新的录制提供存储空间。由您决定 Kanjian 应该保留多长时间的录制。</string>
+    <string name="ui_welcome_timeSettings_title">Kanjian 最多保留多少个片段？</string>
+    <string name="ui_welcome_timeSettings_message">Kanjian 会自动保存每个片段。达到上限后，会覆盖最旧的片段，以便继续循环录制。</string>
     <string name="ui_welcome_timeSettings_values_5min">5分钟</string>
     <string name="ui_welcome_timeSettings_values_15min">15 分钟</string>
     <string name="ui_welcome_timeSettings_values_30min">30 分钟</string>
     <string name="ui_welcome_timeSettings_values_1hour">1 小时</string>
     <string name="ui_welcome_timeSettings_changeableHint">您可以随时更改。</string>
-    <string name="ui_welcome_saveFolder_title">Kanjian 将在哪里存储片段文件？</string>
-    <string name="ui_welcome_saveFolder_message">选择您想要让 Kanjian 存储录制片段的位置。内部文件夹是加密的，只有Kanjian才能访问。 如果您只想录制一个短片段，这个文件夹是可行的。 如果您需要录制更长的时间，您可能要选择一个不同的文件夹，因为内部存储非常有限。</string>
+    <string name="ui_welcome_saveFolder_title">Kanjian 应自动保存到哪里？</string>
+    <string name="ui_welcome_saveFolder_message">每个录制时间段都会永久保存到所选目录，并以该段开始时间命名。请选择媒体文件夹或自定义文件夹。</string>
     <string name="ui_welcome_saveFolder_values_internal">内部存储</string>
     <string name="ui_welcome_saveFolder_values_custom">自定义文件夹</string>
     <string name="ui_welcome_saveFolder_values_media">媒体文件夹</string>
-    <string name="ui_welcome_saveFolder_externalRequired">请选择媒体文件夹或自定义文件夹。Kanjian 没有足够空间将录制的片段存储到内部存储。 或者，返回选择较短的时间。</string>
+    <string name="ui_welcome_saveFolder_externalRequired">请选择媒体文件夹或自定义文件夹。</string>
     <string name="ui_welcome_saveFolder_customFolder_title">选择自定义文件夹</string>
-    <string name="ui_welcome_saveFolder_customFolder_message">您需要选择一个 Kanjian 存储录制片段的文件夹。请选择一个您拥有写访问权限的文件夹。</string>
-    <string name="ui_welcome_timeSettings_values_custom">自定义时长</string>
+    <string name="ui_welcome_saveFolder_customFolder_message">接下来需要选择 Kanjian 自动保存每个录制时间段的文件夹。请选择一个您拥有写权限的文件夹。</string>
+    <string name="ui_welcome_timeSettings_values_custom">自定义数量</string>
     <string name="ui_welcome_timeSettings_values_customFormat_mm">%s 分钟</string>
     <string name="ui_welcome_timeSettings_values_customFormat_hh_mm">%s 小时, %s 分钟</string>
     <string name="ui_welcome_timeSettings_values_customFormat_h_mm">1 小时, %s 分钟</string>
