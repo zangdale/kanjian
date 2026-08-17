@@ -33,6 +33,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.zangdale.kanjian.R
+import app.zangdale.kanjian.db.AppSettings
+import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.ChargingAutoRecordSwitch
 import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.SaveCurrentNowModal
 import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.TorchStatus
 import app.zangdale.kanjian.ui.components.RecorderScreen.molecules.RecordingControl
@@ -46,6 +48,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun VideoRecordingStatus(
     videoRecorder: VideoRecorderModel,
+    appSettings: AppSettings,
 ) {
     val orientation = LocalConfiguration.current.orientation
 
@@ -77,9 +80,15 @@ fun VideoRecordingStatus(
                     contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(32.dp),
+                        verticalArrangement = Arrangement.spacedBy(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
+                        ChargingAutoRecordSwitch(
+                            settings = appSettings,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                        )
                         _VideoControls(videoRecorder)
                         _PrimitiveControls(videoRecorder)
                     }
@@ -111,6 +120,12 @@ fun VideoRecordingStatus(
                         .spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    ChargingAutoRecordSwitch(
+                        settings = appSettings,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                    )
                     _VideoControls(videoRecorder)
                     _PrimitiveControls(videoRecorder)
                 }

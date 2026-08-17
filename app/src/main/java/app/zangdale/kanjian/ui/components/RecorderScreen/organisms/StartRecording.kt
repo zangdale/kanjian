@@ -45,19 +45,17 @@ import app.zangdale.kanjian.R
 import app.zangdale.kanjian.db.AppSettings
 import app.zangdale.kanjian.ui.BIG_PRIMARY_BUTTON_MAX_WIDTH
 import app.zangdale.kanjian.ui.BIG_PRIMARY_BUTTON_SIZE
+import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.ChargingAutoRecordSwitch
 import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.LowStorageInfo
-import app.zangdale.kanjian.ui.components.RecorderScreen.molecules.AudioRecordingStart
 import app.zangdale.kanjian.ui.components.RecorderScreen.molecules.QuickMaxDurationSelector
 import app.zangdale.kanjian.ui.components.RecorderScreen.molecules.VideoRecordingStart
 import app.zangdale.kanjian.ui.effects.rememberForceUpdateOnLifeCycleChange
-import app.zangdale.kanjian.ui.models.AudioRecorderModel
 import app.zangdale.kanjian.ui.models.VideoRecorderModel
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @Composable
 fun StartRecording(
-    audioRecorder: AudioRecorderModel,
     videoRecorder: VideoRecorderModel,
     // Loading this from parent, because if we load it ourselves
     // and permissions have already been granted, initial
@@ -66,7 +64,7 @@ fun StartRecording(
     onSaveLastRecording: () -> Unit,
     onHideTopBar: () -> Unit,
     onShowTopBar: () -> Unit,
-    showAudioRecorder: Boolean,
+    showVideoPreviewFullscreen: Boolean,
 ) {
     val context = LocalContext.current
     val orientation = LocalConfiguration.current.orientation
@@ -112,48 +110,26 @@ fun StartRecording(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            when (orientation) {
-                Configuration.ORIENTATION_LANDSCAPE -> {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        if (showAudioRecorder)
-                            AudioRecordingStart(
-                                audioRecorder = audioRecorder,
-                                appSettings = appSettings,
-                            )
-                        VideoRecordingStart(
-                            videoRecorder = videoRecorder,
-                            appSettings = appSettings,
-                            onHideAudioRecording = onHideTopBar,
-                            onShowAudioRecording = onShowTopBar,
-                            showPreview = !showAudioRecorder,
-                        )
-                    }
-                }
+            Spacer(modifier = Modifier.weight(1f))
 
-                else -> {
-                    Spacer(modifier = Modifier.weight(1f))
+            VideoRecordingStart(
+                videoRecorder = videoRecorder,
+                appSettings = appSettings,
+                onHideAudioRecording = onHideTopBar,
+                onShowAudioRecording = onShowTopBar,
+                showPreview = showVideoPreviewFullscreen,
+                useLargeButtons = isLargeDisplay,
+            )
 
-                    if (showAudioRecorder)
-                        AudioRecordingStart(
-                            audioRecorder = audioRecorder,
-                            appSettings = appSettings,
-                            useLargeButtons = isLargeDisplay,
-                        )
-                    VideoRecordingStart(
-                        videoRecorder = videoRecorder,
-                        appSettings = appSettings,
-                        onHideAudioRecording = onHideTopBar,
-                        onShowAudioRecording = onShowTopBar,
-                        showPreview = !showAudioRecorder,
-                        useLargeButtons = isLargeDisplay,
-                    )
-                }
+            if (!showVideoPreviewFullscreen) {
+                ChargingAutoRecordSwitch(
+                    settings = appSettings,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = 420.dp)
+                        .padding(top = 8.dp),
+                )
             }
-
 
             val forceUpdate = rememberForceUpdateOnLifeCycleChange()
             Column(
@@ -163,7 +139,7 @@ fun StartRecording(
                 verticalArrangement = Arrangement.Bottom,
             ) {
                 if (appSettings.lastRecording?.hasRecordingsAvailable(context) == true) {
-                    val label = stringResource(
+                    val saveLabel = stringResource(
                         R.string.ui_recorder_action_saveOldRecording_label,
                         DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
                             .format(appSettings.lastRecording.recordingStart),
@@ -174,7 +150,7 @@ fun StartRecording(
                             .requiredWidthIn(max = BIG_PRIMARY_BUTTON_MAX_WIDTH)
                             .height(BIG_PRIMARY_BUTTON_SIZE)
                             .semantics {
-                                contentDescription = label
+                                contentDescription = saveLabel
                             },
                         onClick = onSaveLastRecording,
                         contentPadding = ButtonDefaults.TextButtonWithIconContentPadding,
@@ -185,7 +161,7 @@ fun StartRecording(
                             modifier = Modifier.size(ButtonDefaults.IconSize),
                         )
                         Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-                        Text(label)
+                        Text(saveLabel)
                     }
                 } else {
                     Row(

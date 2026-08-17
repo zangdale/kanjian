@@ -136,7 +136,7 @@
     <string name="ui_settings_value_videoQuality_values_hd">HD</string>
     <string name="ui_settings_value_videoQuality_values_sd">Standard</string>
     <string name="ui_settings_value_videoQuality_values_lowest">Lowest</string>
-    <string name="ui_videoRecorder_action_start_label">Start Video Recording</string>
+    <string name="ui_videoRecorder_action_start_label">Start Recording</string>
     <string name="ui_videoRecorder_action_start_settings_enableAudio_label">Record with Audio</string>
     <string name="ui_videoRecorder_action_start_settings_cameraLens_back_label">Back facing</string>
     <string name="ui_videoRecorder_action_start_settings_cameraLens_front_label">Front facing</string>
@@ -149,6 +149,8 @@
     <string name="ui_videoRecorder_action_torch_off">Disable Torch</string>
     <string name="ui_videoRecorder_action_torch_on">Enable Torch</string>
     <string name="ui_videoRecorder_action_configure_label">Press long for configuration</string>
+    <string name="ui_recorder_option_autoRecordOnCharge_title">Auto-record when charging</string>
+    <string name="ui_recorder_option_autoRecordOnCharge_description">When enabled, plugging in a charging cable starts video recording, and unplugging stops and saves it. When disabled, start and stop recording manually.</string>
     <string name="ui_recorder_action_changeMaxDuration_title">Keep at most...</string>
     <string name="ui_recorder_info_startTime_short">Recording started at %s</string>
     <string name="ui_recorder_info_startTime_full">Recording started %s</string>

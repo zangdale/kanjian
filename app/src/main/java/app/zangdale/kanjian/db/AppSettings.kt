@@ -45,6 +45,9 @@ data class AppSettings(
     val deleteRecordingsImmediately: Boolean = false,
     val enableRecorderSounds: Boolean = true,
     val saveFolder: String? = RECORDER_MEDIA_SELECTED_VALUE,
+    // When enabled, plugging in a charging cable starts video recording and
+    // unplugging stops (and saves) the recording automatically.
+    val autoRecordOnCharge: Boolean = false,
 ) {
     fun setShowAdvancedSettings(showAdvancedSettings: Boolean): AppSettings {
         return copy(showAdvancedSettings = showAdvancedSettings)
@@ -121,6 +124,10 @@ data class AppSettings(
 
     fun setSaveFolder(saveFolder: String?): AppSettings {
         return copy(saveFolder = saveFolder)
+    }
+
+    fun setAutoRecordOnCharge(autoRecordOnCharge: Boolean): AppSettings {
+        return copy(autoRecordOnCharge = autoRecordOnCharge)
     }
 
     fun setAppLockSettings(appLockSettings: AppLockSettings?): AppSettings {

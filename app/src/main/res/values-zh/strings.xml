@@ -141,7 +141,7 @@
     <string name="ui_settings_value_videoQuality_values_hd">高清</string>
     <string name="ui_settings_value_videoQuality_values_sd">标准</string>
     <string name="ui_settings_value_videoQuality_values_lowest">最低</string>
-    <string name="ui_videoRecorder_action_start_label">开始录制视频</string>
+    <string name="ui_videoRecorder_action_start_label">开始录制</string>
     <string name="ui_videoRecorder_action_start_settings_enableAudio_label">同时录制音频</string>
     <string name="ui_videoRecorder_action_start_settings_cameraLens_back_label">后置摄像头</string>
     <string name="ui_videoRecorder_action_start_settings_cameraLens_front_label">前置摄像头</string>
@@ -154,6 +154,8 @@
     <string name="ui_videoRecorder_action_torch_off">禁用手电筒</string>
     <string name="ui_videoRecorder_action_torch_on">启用手电筒</string>
     <string name="ui_videoRecorder_action_configure_label">长按进行配置</string>
+    <string name="ui_recorder_option_autoRecordOnCharge_title">插电自动录制</string>
+    <string name="ui_recorder_option_autoRecordOnCharge_description">开启后：插入充电线自动开始录视频，拔掉充电线自动停止并保存。关闭后需手动点击开始/停止。</string>
     <string name="ui_recorder_action_changeMaxDuration_title">最多保留...</string>
     <string name="ui_recorder_info_startTime_short">录制开始于 %s</string>
     <string name="ui_recorder_info_startTime_full">录制开始于 %s</string>
