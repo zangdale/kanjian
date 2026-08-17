@@ -33,6 +33,15 @@ abstract class IntervalRecorderService<I, B : BatchesFolder> :
     override fun shouldPlayRecorderSounds(): Boolean =
         ::settings.isInitialized && settings.enableRecorderSounds
 
+    override fun getCustomStartSoundUri(): String? =
+        if (::settings.isInitialized) settings.customStartSoundUri else null
+
+    override fun getCustomPauseSoundUri(): String? =
+        if (::settings.isInitialized) settings.customPauseSoundUri else null
+
+    override fun getCustomFragmentSoundUri(): String? =
+        if (::settings.isInitialized) settings.customFragmentSoundUri else null
+
     // Kept for compatibility with legacy merge/export flows.
     fun lockFiles() {}
 

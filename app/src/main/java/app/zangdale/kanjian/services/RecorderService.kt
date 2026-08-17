@@ -157,21 +157,27 @@ abstract class RecorderService : LifecycleService() {
                     isPaused = false
                 }
                 if (previousState == RecorderState.IDLE || previousState == RecorderState.PAUSED) {
-                    playRecorderSound { RecorderSoundPlayer.playStart(this) }
+                    playRecorderSound {
+                        RecorderSoundPlayer.playStart(this, getCustomStartSoundUri())
+                    }
                 }
                 // `start` is handled by `startRecording`
             }
 
             RecorderState.PAUSED -> {
                 if (previousState == RecorderState.RECORDING) {
-                    playRecorderSound { RecorderSoundPlayer.playPause(this) }
+                    playRecorderSound {
+                        RecorderSoundPlayer.playPause(this, getCustomPauseSoundUri())
+                    }
                 }
                 pause()
             }
 
             RecorderState.STOPPED -> {
                 if (previousState == RecorderState.RECORDING || previousState == RecorderState.PAUSED) {
-                    playRecorderSound { RecorderSoundPlayer.playPause(this) }
+                    playRecorderSound {
+                        RecorderSoundPlayer.playPause(this, getCustomPauseSoundUri())
+                    }
                 }
             }
 
@@ -221,6 +227,12 @@ abstract class RecorderService : LifecycleService() {
 
     protected open fun shouldPlayRecorderSounds(): Boolean = true
 
+    protected open fun getCustomStartSoundUri(): String? = null
+
+    protected open fun getCustomPauseSoundUri(): String? = null
+
+    protected open fun getCustomFragmentSoundUri(): String? = null
+
     protected fun playRecorderSound(play: () -> Unit) {
         if (shouldPlayRecorderSounds()) {
             play()
@@ -228,7 +240,9 @@ abstract class RecorderService : LifecycleService() {
     }
 
     protected fun playFragmentSavedSound() {
-        playRecorderSound { RecorderSoundPlayer.playFragment(this) }
+        playRecorderSound {
+            RecorderSoundPlayer.playFragment(this, getCustomFragmentSoundUri())
+        }
     }
 
     // Throw this error if you show a dialog yourself.

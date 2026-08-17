@@ -48,6 +48,10 @@ data class AppSettings(
     // When enabled, plugging in a charging cable starts video recording and
     // unplugging stops (and saves) the recording automatically.
     val autoRecordOnCharge: Boolean = false,
+    // Optional custom URIs for recorder cue sounds. Null keeps the built-in defaults.
+    val customStartSoundUri: String? = null,
+    val customPauseSoundUri: String? = null,
+    val customFragmentSoundUri: String? = null,
 ) {
     fun setShowAdvancedSettings(showAdvancedSettings: Boolean): AppSettings {
         return copy(showAdvancedSettings = showAdvancedSettings)
@@ -120,6 +124,18 @@ data class AppSettings(
 
     fun setEnableRecorderSounds(enableRecorderSounds: Boolean): AppSettings {
         return copy(enableRecorderSounds = enableRecorderSounds)
+    }
+
+    fun setCustomStartSoundUri(customStartSoundUri: String?): AppSettings {
+        return copy(customStartSoundUri = customStartSoundUri)
+    }
+
+    fun setCustomPauseSoundUri(customPauseSoundUri: String?): AppSettings {
+        return copy(customPauseSoundUri = customPauseSoundUri)
+    }
+
+    fun setCustomFragmentSoundUri(customFragmentSoundUri: String?): AppSettings {
+        return copy(customFragmentSoundUri = customFragmentSoundUri)
     }
 
     fun setSaveFolder(saveFolder: String?): AppSettings {

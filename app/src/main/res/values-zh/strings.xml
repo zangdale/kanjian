@@ -110,6 +110,15 @@
     <string name="ui_settings_option_deleteRecordingsImmediately_description">如果启用，Kanjian 将在保存文件后立即删除录制的片段文件。</string>
     <string name="ui_settings_option_recorderSounds_title">录制提示音</string>
     <string name="ui_settings_option_recorderSounds_description">开始、暂停、停止录制，以及片段保存完成时播放短提示音。</string>
+    <string name="ui_settings_option_recorderSounds_custom_hint">三种提示音可分别从文件管理器选择 MP3 替换默认音；某一项不选则该项继续用默认。</string>
+    <string name="ui_settings_option_recorderSounds_custom_start">开始时的提示音</string>
+    <string name="ui_settings_option_recorderSounds_custom_pause">暂停/停止时的提示音</string>
+    <string name="ui_settings_option_recorderSounds_custom_fragment">保存片段时的提示音</string>
+    <string name="ui_settings_option_recorderSounds_custom_default">默认</string>
+    <string name="ui_settings_option_recorderSounds_custom_selected">已选 MP3</string>
+    <string name="ui_settings_option_recorderSounds_custom_select">从文件选择 MP3</string>
+    <string name="ui_settings_option_recorderSounds_custom_reset">恢复默认</string>
+    <string name="ui_settings_option_recorderSounds_custom_preview">试听</string>
     <string name="ui_settings_option_saveFolder_title">自动保存目录</string>
     <string name="ui_settings_option_saveFolder_explanation">Kanjian 会把每个录制时间段自动永久保存到此目录，文件名使用该段开始时间。</string>
     <string name="ui_settings_option_saveFolder_action_select_label">选择</string>

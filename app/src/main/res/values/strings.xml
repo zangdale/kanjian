@@ -124,6 +124,15 @@
     <string name="ui_settings_option_deleteRecordingsImmediately_description">If enabled, Kanjian will immediately delete recordings after you have saved the file.</string>
     <string name="ui_settings_option_recorderSounds_title">Recorder Sounds</string>
     <string name="ui_settings_option_recorderSounds_description">Play a short sound when recording starts, pauses, stops, or when a segment is saved.</string>
+    <string name="ui_settings_option_recorderSounds_custom_hint">Each of the three cue sounds can be replaced independently with an MP3 from your file manager. Leave any item unset to keep that default.</string>
+    <string name="ui_settings_option_recorderSounds_custom_start">Sound when recording starts</string>
+    <string name="ui_settings_option_recorderSounds_custom_pause">Sound when pausing / stopping</string>
+    <string name="ui_settings_option_recorderSounds_custom_fragment">Sound when a segment is saved</string>
+    <string name="ui_settings_option_recorderSounds_custom_default">Default</string>
+    <string name="ui_settings_option_recorderSounds_custom_selected">Selected MP3</string>
+    <string name="ui_settings_option_recorderSounds_custom_select">Pick MP3 file</string>
+    <string name="ui_settings_option_recorderSounds_custom_reset">Use default</string>
+    <string name="ui_settings_option_recorderSounds_custom_preview">Preview sound</string>
     <string name="ui_settings_option_saveFolder_title">Auto-save folder</string>
     <string name="ui_settings_option_saveFolder_explanation">Where Kanjian should automatically save each recording segment. Every interval is kept permanently and named by its start time.</string>
     <string name="ui_settings_option_saveFolder_action_select_label">Select</string>
