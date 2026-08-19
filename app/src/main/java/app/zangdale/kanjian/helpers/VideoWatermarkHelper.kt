@@ -4,7 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.PorterDuff
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.util.Log
 import android.util.Size
@@ -58,20 +59,85 @@ object VideoWatermarkHelper {
         includeLocation: Boolean,
         latitude: Double?,
         longitude: Double?,
+        includeGyroscope: Boolean = false,
+        gyroscope: GyroscopeTracker.Reading? = null,
+        includeAccelerometer: Boolean = false,
+        accelerometer: AccelerometerTracker.Reading? = null,
+        includeOrientation: Boolean = false,
+        orientation: OrientationTracker.Reading? = null,
+        includeBarometer: Boolean = false,
+        barometer: BarometerTracker.Reading? = null,
+        includeLinearAcceleration: Boolean = false,
+        linearAcceleration: LinearAccelerationTracker.Reading? = null,
+        footerText: String = "",
         now: LocalDateTime = LocalDateTime.now(),
     ): String {
-        val timePart = now.format(timeFormatter)
-        if (!includeLocation || latitude == null || longitude == null) {
-            return timePart
+        val lines = mutableListOf(now.format(timeFormatter))
+
+        if (includeLocation && latitude != null && longitude != null) {
+            lines += String.format(
+                Locale.US,
+                "GPS: %.6f, %.6f",
+                latitude,
+                longitude,
+            )
         }
 
-        return String.format(
-            Locale.US,
-            "%s  GPS: %.6f, %.6f",
-            timePart,
-            latitude,
-            longitude,
-        )
+        if (includeGyroscope && gyroscope != null) {
+            lines += String.format(
+                Locale.US,
+                "GYRO: X:%.2f Y:%.2f Z:%.2f °/s",
+                gyroscope.xDegPerSec,
+                gyroscope.yDegPerSec,
+                gyroscope.zDegPerSec,
+            )
+        }
+
+        if (includeAccelerometer && accelerometer != null) {
+            lines += String.format(
+                Locale.US,
+                "ACC: X:%.2f Y:%.2f Z:%.2f m/s²",
+                accelerometer.xMetersPerSec2,
+                accelerometer.yMetersPerSec2,
+                accelerometer.zMetersPerSec2,
+            )
+        }
+
+        if (includeOrientation && orientation != null) {
+            lines += String.format(
+                Locale.US,
+                "ORI: P:%.1f R:%.1f Y:%.1f °",
+                orientation.pitchDeg,
+                orientation.rollDeg,
+                orientation.azimuthDeg,
+            )
+        }
+
+        if (includeBarometer && barometer != null) {
+            lines += String.format(
+                Locale.US,
+                "BARO: %.1f hPa  ALT: %.1f m",
+                barometer.pressureHpa,
+                barometer.altitudeMeters,
+            )
+        }
+
+        if (includeLinearAcceleration && linearAcceleration != null) {
+            lines += String.format(
+                Locale.US,
+                "LIN: X:%.2f Y:%.2f Z:%.2f m/s²",
+                linearAcceleration.xMetersPerSec2,
+                linearAcceleration.yMetersPerSec2,
+                linearAcceleration.zMetersPerSec2,
+            )
+        }
+
+        val footer = footerText.trim()
+        if (footer.isNotEmpty()) {
+            lines += footer
+        }
+
+        return lines.joinToString("\n")
     }
 
     fun drawWatermark(
@@ -79,47 +145,87 @@ object VideoWatermarkHelper {
         text: String,
         typeface: Typeface,
         frameSize: Size,
+        cropRect: Rect = Rect(0, 0, frameSize.width, frameSize.height),
+        rotationDegrees: Int = 0,
+        horizontalMarginPercent: Int = 2,
+        verticalMarginPercent: Int = 80,
     ) {
         if (text.isBlank()) {
             return
         }
 
-        val scale = frameSize.width.coerceAtMost(frameSize.height) / 1080f
-        val fontSize = (28f * scale).coerceAtLeast(18f)
-        val padding = (16f * scale).coerceAtLeast(10f)
-        val boxPadX = (8f * scale).coerceAtLeast(6f)
-        val boxPadY = (6f * scale).coerceAtLeast(4f)
+        val lines = text.lines().filter { it.isNotBlank() }
+        if (lines.isEmpty()) {
+            return
+        }
 
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        // Prevent ghosting from previous frames on some devices.
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+
+        // Visible video area may be smaller than the full buffer.
+        val visible = if (cropRect.isEmpty) {
+            Rect(0, 0, frameSize.width, frameSize.height)
+        } else {
+            Rect(cropRect)
+        }
+
+        val visibleWidth = visible.width().coerceAtLeast(1)
+        val visibleHeight = visible.height().coerceAtLeast(1)
+        val scale = visibleWidth.coerceAtMost(visibleHeight) / 1080f
+        val fontSize = (34f * scale).coerceAtLeast(22f)
+        val lineGap = (6f * scale).coerceAtLeast(3f)
+        val strokeWidth = (3.5f * scale).coerceAtLeast(2.5f)
+
+        val clampedHorizontalMarginPercent = horizontalMarginPercent.coerceIn(0, 90)
+        val clampedVerticalMarginPercent = verticalMarginPercent.coerceIn(0, 90)
+        val maxHorizontalPadding = (visibleWidth - 1f).coerceAtLeast(0f)
+        val maxVerticalPadding = (visibleHeight - 1f).coerceAtLeast(0f)
+        val horizontalPadding = (visibleWidth * clampedHorizontalMarginPercent / 100f)
+            .coerceIn(0f, maxHorizontalPadding)
+        val verticalPadding = (visibleHeight * clampedVerticalMarginPercent / 100f)
+            .coerceIn(0f, maxVerticalPadding)
+
+        val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             this.typeface = typeface
             this.textSize = fontSize
             color = Color.WHITE
-            setShadowLayer(2f * scale, 0f, 1f * scale, Color.BLACK)
-        }
-
-        val textWidth = paint.measureText(text)
-        val fm = paint.fontMetrics
-        val left = padding
-        val baseline = frameSize.height - padding - fm.descent
-        val right = left + textWidth
-
-        val boxPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.argb(115, 0, 0, 0)
             style = Paint.Style.FILL
+            isFakeBoldText = true
+            textAlign = Paint.Align.LEFT
         }
 
-        canvas.drawRoundRect(
-            RectF(
-                left - boxPadX,
-                baseline + fm.ascent - boxPadY,
-                right + boxPadX,
-                baseline + fm.descent + boxPadY,
-            ),
-            6f * scale,
-            6f * scale,
-            boxPaint,
-        )
+        val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            this.typeface = typeface
+            this.textSize = fontSize
+            color = Color.BLACK
+            style = Paint.Style.STROKE
+            this.strokeWidth = strokeWidth
+            strokeJoin = Paint.Join.ROUND
+            isFakeBoldText = true
+            textAlign = Paint.Align.LEFT
+        }
 
-        canvas.drawText(text, left, baseline, paint)
+        val fm = fillPaint.fontMetrics
+        val lineHeight = (fm.descent - fm.ascent) + lineGap
+        val pivotX = visible.left + horizontalPadding
+        val pivotY = visible.top + verticalPadding
+
+        // Manual rotation only — do not auto-follow device/camera orientation.
+        val normalizedRotation = ((rotationDegrees % 360) + 360) % 360
+
+        canvas.save()
+        canvas.clipRect(visible)
+        canvas.translate(pivotX, pivotY)
+        if (normalizedRotation != 0) {
+            canvas.rotate(normalizedRotation.toFloat())
+        }
+
+        var baseline = -fm.ascent
+        for (line in lines) {
+            canvas.drawText(line, 0f, baseline, strokePaint)
+            canvas.drawText(line, 0f, baseline, fillPaint)
+            baseline += lineHeight
+        }
+        canvas.restore()
     }
 }

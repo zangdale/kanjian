@@ -69,6 +69,7 @@ fun VideoRecordingStart(
         VideoRecorderPreparationSheet(
             showPreview = showPreview,
             videoSettings = videoRecorder,
+            appSettings = appSettings,
             onDismiss = {
                 showSheet = false
             },

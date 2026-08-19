@@ -492,6 +492,17 @@ data class VideoRecorderSettings(
     val targetFrameRate: Int? = null,
     val enableWatermark: Boolean = false,
     val includeLocationInWatermark: Boolean = true,
+    val includeGyroscopeInWatermark: Boolean = true,
+    val includeAccelerometerInWatermark: Boolean = true,
+    val includeOrientationInWatermark: Boolean = true,
+    val includeBarometerInWatermark: Boolean = true,
+    val includeLinearAccelerationInWatermark: Boolean = true,
+    val watermarkRotationDegrees: Int = 0,
+    /** Left inset as percent of visible width (0–90). */
+    val watermarkHorizontalMarginPercent: Int = 2,
+    /** Top inset as percent of visible height (0–90). */
+    val watermarkVerticalMarginPercent: Int = 80,
+    val watermarkFooterText: String = DEFAULT_WATERMARK_FOOTER,
 ) {
     fun setTargetedVideoBitRate(bitRate: Int?): VideoRecorderSettings {
         return copy(targetedVideoBitRate = bitRate)
@@ -515,6 +526,52 @@ data class VideoRecorderSettings(
         return copy(includeLocationInWatermark = includeLocationInWatermark)
     }
 
+    fun setIncludeGyroscopeInWatermark(includeGyroscopeInWatermark: Boolean): VideoRecorderSettings {
+        return copy(includeGyroscopeInWatermark = includeGyroscopeInWatermark)
+    }
+
+    fun setIncludeAccelerometerInWatermark(includeAccelerometerInWatermark: Boolean): VideoRecorderSettings {
+        return copy(includeAccelerometerInWatermark = includeAccelerometerInWatermark)
+    }
+
+    fun setIncludeOrientationInWatermark(includeOrientationInWatermark: Boolean): VideoRecorderSettings {
+        return copy(includeOrientationInWatermark = includeOrientationInWatermark)
+    }
+
+    fun setIncludeBarometerInWatermark(includeBarometerInWatermark: Boolean): VideoRecorderSettings {
+        return copy(includeBarometerInWatermark = includeBarometerInWatermark)
+    }
+
+    fun setIncludeLinearAccelerationInWatermark(includeLinearAccelerationInWatermark: Boolean): VideoRecorderSettings {
+        return copy(includeLinearAccelerationInWatermark = includeLinearAccelerationInWatermark)
+    }
+
+    fun setWatermarkRotationDegrees(watermarkRotationDegrees: Int): VideoRecorderSettings {
+        return copy(watermarkRotationDegrees = watermarkRotationDegrees)
+    }
+
+    fun setWatermarkHorizontalMarginPercent(watermarkHorizontalMarginPercent: Int): VideoRecorderSettings {
+        return copy(
+            watermarkHorizontalMarginPercent = watermarkHorizontalMarginPercent.coerceIn(
+                WATERMARK_MARGIN_MIN,
+                WATERMARK_MARGIN_MAX,
+            )
+        )
+    }
+
+    fun setWatermarkVerticalMarginPercent(watermarkVerticalMarginPercent: Int): VideoRecorderSettings {
+        return copy(
+            watermarkVerticalMarginPercent = watermarkVerticalMarginPercent.coerceIn(
+                WATERMARK_MARGIN_MIN,
+                WATERMARK_MARGIN_MAX,
+            )
+        )
+    }
+
+    fun setWatermarkFooterText(watermarkFooterText: String): VideoRecorderSettings {
+        return copy(watermarkFooterText = watermarkFooterText)
+    }
+
     fun getQuality(): Quality? =
         quality?.let {
             QUALITY_NAME_QUALITY_MAP[it]!!
@@ -534,6 +591,15 @@ data class VideoRecorderSettings(
 
     companion object {
         fun getDefaultInstance() = VideoRecorderSettings()
+
+        val WATERMARK_ROTATION_OPTIONS = listOf(0, 90, 180, 270, 360)
+        const val WATERMARK_MARGIN_MIN = 0
+        const val WATERMARK_MARGIN_MAX = 90
+        const val WATERMARK_HORIZONTAL_MARGIN_MIN = WATERMARK_MARGIN_MIN
+        const val WATERMARK_HORIZONTAL_MARGIN_MAX = WATERMARK_MARGIN_MAX
+        val WATERMARK_MARGIN_EXAMPLES = listOf(0, 2, 5, 10, 20, 40, 60, 80)
+        val WATERMARK_HORIZONTAL_MARGIN_EXAMPLES = WATERMARK_MARGIN_EXAMPLES
+        const val DEFAULT_WATERMARK_FOOTER = "kanjian记录仪"
 
         val QUALITY_NAME_QUALITY_MAP: Map<String, Quality> = mapOf(
             "LOWEST" to Quality.LOWEST,

@@ -29,8 +29,13 @@ import androidx.core.content.ContextCompat
 import app.zangdale.kanjian.NotificationHelper
 import app.zangdale.kanjian.db.RecordingInformation
 import app.zangdale.kanjian.enums.RecorderState
+import app.zangdale.kanjian.helpers.AccelerometerTracker
+import app.zangdale.kanjian.helpers.BarometerTracker
 import app.zangdale.kanjian.helpers.BatchesFolder
+import app.zangdale.kanjian.helpers.GyroscopeTracker
+import app.zangdale.kanjian.helpers.LinearAccelerationTracker
 import app.zangdale.kanjian.helpers.LocationTracker
+import app.zangdale.kanjian.helpers.OrientationTracker
 import app.zangdale.kanjian.helpers.VideoBatchesFolder
 import app.zangdale.kanjian.helpers.VideoWatermarkHelper
 import app.zangdale.kanjian.ui.SUPPORTS_SAVING_VIDEOS_IN_CUSTOM_FOLDERS
@@ -56,6 +61,11 @@ class VideoRecorderService :
     private var videoCapture: VideoCapture<Recorder>? = null
     private var activeRecording: Recording? = null
     private var locationTracker: LocationTracker? = null
+    private var gyroscopeTracker: GyroscopeTracker? = null
+    private var accelerometerTracker: AccelerometerTracker? = null
+    private var orientationTracker: OrientationTracker? = null
+    private var barometerTracker: BarometerTracker? = null
+    private var linearAccelerationTracker: LinearAccelerationTracker? = null
     private var overlayEffect: OverlayEffect? = null
     private var overlayHandlerThread: HandlerThread? = null
 
@@ -93,6 +103,21 @@ class VideoRecorderService :
             if (settings.videoRecorderSettings.includeLocationInWatermark) {
                 locationTracker = LocationTracker(this).also { it.start() }
             }
+            if (settings.videoRecorderSettings.includeGyroscopeInWatermark) {
+                gyroscopeTracker = GyroscopeTracker(this).also { it.start() }
+            }
+            if (settings.videoRecorderSettings.includeAccelerometerInWatermark) {
+                accelerometerTracker = AccelerometerTracker(this).also { it.start() }
+            }
+            if (settings.videoRecorderSettings.includeOrientationInWatermark) {
+                orientationTracker = OrientationTracker(this).also { it.start() }
+            }
+            if (settings.videoRecorderSettings.includeBarometerInWatermark) {
+                barometerTracker = BarometerTracker(this).also { it.start() }
+            }
+            if (settings.videoRecorderSettings.includeLinearAccelerationInWatermark) {
+                linearAccelerationTracker = LinearAccelerationTracker(this).also { it.start() }
+            }
         }
 
         scope.launch {
@@ -103,6 +128,16 @@ class VideoRecorderService :
     override suspend fun stop() {
         locationTracker?.stop()
         locationTracker = null
+        gyroscopeTracker?.stop()
+        gyroscopeTracker = null
+        accelerometerTracker?.stop()
+        accelerometerTracker = null
+        orientationTracker?.stop()
+        orientationTracker = null
+        barometerTracker?.stop()
+        barometerTracker = null
+        linearAccelerationTracker?.stop()
+        linearAccelerationTracker = null
 
         super.stop()
 
@@ -225,6 +260,18 @@ class VideoRecorderService :
 
         val typeface = VideoWatermarkHelper.resolveTypeface(this)
         val includeLocation = settings.videoRecorderSettings.includeLocationInWatermark
+        val includeGyroscope = settings.videoRecorderSettings.includeGyroscopeInWatermark
+        val includeAccelerometer = settings.videoRecorderSettings.includeAccelerometerInWatermark
+        val includeOrientation = settings.videoRecorderSettings.includeOrientationInWatermark
+        val includeBarometer = settings.videoRecorderSettings.includeBarometerInWatermark
+        val includeLinearAcceleration =
+            settings.videoRecorderSettings.includeLinearAccelerationInWatermark
+        val watermarkRotationDegrees = settings.videoRecorderSettings.watermarkRotationDegrees
+        val watermarkHorizontalMarginPercent =
+            settings.videoRecorderSettings.watermarkHorizontalMarginPercent
+        val watermarkVerticalMarginPercent =
+            settings.videoRecorderSettings.watermarkVerticalMarginPercent
+        val watermarkFooterText = settings.videoRecorderSettings.watermarkFooterText
 
         return OverlayEffect(
             CameraEffect.VIDEO_CAPTURE,
@@ -238,12 +285,27 @@ class VideoRecorderService :
                     includeLocation = includeLocation,
                     latitude = locationTracker?.lastLocation?.latitude,
                     longitude = locationTracker?.lastLocation?.longitude,
+                    includeGyroscope = includeGyroscope,
+                    gyroscope = gyroscopeTracker?.lastReading,
+                    includeAccelerometer = includeAccelerometer,
+                    accelerometer = accelerometerTracker?.lastReading,
+                    includeOrientation = includeOrientation,
+                    orientation = orientationTracker?.lastReading,
+                    includeBarometer = includeBarometer,
+                    barometer = barometerTracker?.lastReading,
+                    includeLinearAcceleration = includeLinearAcceleration,
+                    linearAcceleration = linearAccelerationTracker?.lastReading,
+                    footerText = watermarkFooterText,
                 )
                 VideoWatermarkHelper.drawWatermark(
                     canvas = frame.overlayCanvas,
                     text = text,
                     typeface = typeface,
                     frameSize = frame.size,
+                    cropRect = frame.cropRect,
+                    rotationDegrees = watermarkRotationDegrees,
+                    horizontalMarginPercent = watermarkHorizontalMarginPercent,
+                    verticalMarginPercent = watermarkVerticalMarginPercent,
                 )
                 true
             }
