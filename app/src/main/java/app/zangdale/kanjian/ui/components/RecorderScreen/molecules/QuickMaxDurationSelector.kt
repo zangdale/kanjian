@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.zangdale.kanjian.R
 import app.zangdale.kanjian.dataStore
-import app.zangdale.kanjian.db.AudioRecorderSettings.Companion.EXAMPLE_MAX_SEGMENTS
+import app.zangdale.kanjian.db.AppSettings.Companion.EXAMPLE_MAX_SEGMENTS
 import app.zangdale.kanjian.ui.SHEET_BOTTOM_OFFSET
 import kotlinx.coroutines.launch
 

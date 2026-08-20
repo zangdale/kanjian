@@ -3,10 +3,12 @@ package app.zangdale.kanjian.ui.components.RecorderScreen.organisms
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +17,9 @@ import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ButtonDefaults
@@ -37,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -66,8 +71,8 @@ fun StartRecording(
     onShowTopBar: () -> Unit,
     showVideoPreviewFullscreen: Boolean,
 ) {
-    val context = LocalContext.current
     val orientation = LocalConfiguration.current.orientation
+    val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
 
     val label = stringResource(
         R.string.ui_recorder_action_start_description_2,
@@ -103,107 +108,190 @@ fun StartRecording(
         val isLargeDisplay =
             maxWidth > 250.dp && maxHeight > 600.dp && orientation == Configuration.ORIENTATION_PORTRAIT
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = if (orientation == Configuration.ORIENTATION_PORTRAIT) 0.dp else 16.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            VideoRecordingStart(
-                videoRecorder = videoRecorder,
-                appSettings = appSettings,
-                onHideAudioRecording = onHideTopBar,
-                onShowAudioRecording = onShowTopBar,
-                showPreview = showVideoPreviewFullscreen,
-                useLargeButtons = isLargeDisplay,
-            )
-
-            if (!showVideoPreviewFullscreen) {
-                ChargingAutoRecordSwitch(
-                    settings = appSettings,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .widthIn(max = 420.dp)
-                        .padding(top = 8.dp),
-                )
-            }
-
-            val forceUpdate = rememberForceUpdateOnLifeCycleChange()
-            Column(
+        if (isLandscape) {
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .then(forceUpdate),
-                verticalArrangement = Arrangement.Bottom,
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                if (appSettings.lastRecording?.hasRecordingsAvailable(context) == true) {
-                    val saveLabel = stringResource(
-                        R.string.ui_recorder_action_saveOldRecording_label,
-                        DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
-                            .format(appSettings.lastRecording.recordingStart),
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    VideoRecordingStart(
+                        videoRecorder = videoRecorder,
+                        appSettings = appSettings,
+                        onHideAudioRecording = onHideTopBar,
+                        onShowAudioRecording = onShowTopBar,
+                        showPreview = showVideoPreviewFullscreen,
+                        useLargeButtons = false,
                     )
-                    TextButton(
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                        .then(rememberForceUpdateOnLifeCycleChange()),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    if (!showVideoPreviewFullscreen) {
+                        ChargingAutoRecordSwitch(
+                            settings = appSettings,
+                            showDescription = false,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .widthIn(max = 420.dp),
+                        )
+                    }
+
+                    _StartRecordingFooter(
+                        appSettings = appSettings,
+                        annotatedDescription = annotatedDescription,
+                        onSaveLastRecording = onSaveLastRecording,
+                        onShowQuickMaxDurationSelector = {
+                            showQuickMaxDurationSelector = true
+                        },
+                        compact = true,
+                    )
+
+                    LowStorageInfo(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .requiredWidthIn(max = BIG_PRIMARY_BUTTON_MAX_WIDTH)
-                            .height(BIG_PRIMARY_BUTTON_SIZE)
-                            .semantics {
-                                contentDescription = saveLabel
-                            },
-                        onClick = onSaveLastRecording,
-                        contentPadding = ButtonDefaults.TextButtonWithIconContentPadding,
-                    ) {
-                        Icon(
-                            Icons.Default.Save,
-                            contentDescription = null,
-                            modifier = Modifier.size(ButtonDefaults.IconSize),
-                        )
-                        Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-                        Text(saveLabel)
-                    }
-                } else {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.launcher_monochrome_noopacity),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant),
-                            modifier = Modifier
-                                .size(ButtonDefaults.IconSize)
-                        )
-
-                        Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-
-                        ClickableText(
-                            text = annotatedDescription,
-                            onClick = { textIndex ->
-                                if (annotatedDescription.getStringAnnotations(textIndex, textIndex)
-                                        .firstOrNull()?.tag == "minutes"
-                                ) {
-                                    showQuickMaxDurationSelector = true
-                                }
-                            },
-                            modifier = Modifier
-                                .widthIn(max = 300.dp)
-                                .fillMaxWidth(),
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            ),
-                        )
-                    }
+                            .widthIn(max = 400.dp)
+                            .padding(horizontal = 4.dp, vertical = 4.dp),
+                        appSettings = appSettings,
+                    )
                 }
             }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
 
-            LowStorageInfo(
-                modifier = if (isLargeDisplay) Modifier
-                    .padding(16.dp)
-                    .widthIn(max = 400.dp) else Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                appSettings = appSettings
+                VideoRecordingStart(
+                    videoRecorder = videoRecorder,
+                    appSettings = appSettings,
+                    onHideAudioRecording = onHideTopBar,
+                    onShowAudioRecording = onShowTopBar,
+                    showPreview = showVideoPreviewFullscreen,
+                    useLargeButtons = isLargeDisplay,
+                )
+
+                if (!showVideoPreviewFullscreen) {
+                    ChargingAutoRecordSwitch(
+                        settings = appSettings,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(max = 420.dp)
+                            .padding(top = 8.dp),
+                    )
+                }
+
+                val forceUpdate = rememberForceUpdateOnLifeCycleChange()
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .then(forceUpdate),
+                    verticalArrangement = Arrangement.Bottom,
+                ) {
+                    _StartRecordingFooter(
+                        appSettings = appSettings,
+                        annotatedDescription = annotatedDescription,
+                        onSaveLastRecording = onSaveLastRecording,
+                        onShowQuickMaxDurationSelector = {
+                            showQuickMaxDurationSelector = true
+                        },
+                        compact = false,
+                    )
+                }
+
+                LowStorageInfo(
+                    modifier = if (isLargeDisplay) Modifier
+                        .padding(16.dp)
+                        .widthIn(max = 400.dp) else Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                    appSettings = appSettings,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun _StartRecordingFooter(
+    appSettings: AppSettings,
+    annotatedDescription: AnnotatedString,
+    onSaveLastRecording: () -> Unit,
+    onShowQuickMaxDurationSelector: () -> Unit,
+    compact: Boolean,
+) {
+    val context = LocalContext.current
+
+    if (appSettings.lastRecording?.hasRecordingsAvailable(context) == true) {
+        val saveLabel = stringResource(
+            R.string.ui_recorder_action_saveOldRecording_label,
+            DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
+                .format(appSettings.lastRecording.recordingStart),
+        )
+        TextButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .requiredWidthIn(max = BIG_PRIMARY_BUTTON_MAX_WIDTH)
+                .height(if (compact) 48.dp else BIG_PRIMARY_BUTTON_SIZE)
+                .semantics {
+                    contentDescription = saveLabel
+                },
+            onClick = onSaveLastRecording,
+            contentPadding = ButtonDefaults.TextButtonWithIconContentPadding,
+        ) {
+            Icon(
+                Icons.Default.Save,
+                contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize),
+            )
+            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+            Text(saveLabel)
+        }
+    } else {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = if (compact) 8.dp else 0.dp),
+        ) {
+            Image(
+                painter = painterResource(R.drawable.launcher_monochrome_noopacity),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant),
+                modifier = Modifier.size(ButtonDefaults.IconSize),
+            )
+
+            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+
+            ClickableText(
+                text = annotatedDescription,
+                onClick = { textIndex ->
+                    if (annotatedDescription.getStringAnnotations(textIndex, textIndex)
+                            .firstOrNull()?.tag == "minutes"
+                    ) {
+                        onShowQuickMaxDurationSelector()
+                    }
+                },
+                modifier = Modifier
+                    .widthIn(max = if (compact) 360.dp else 300.dp)
+                    .fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
             )
         }
     }

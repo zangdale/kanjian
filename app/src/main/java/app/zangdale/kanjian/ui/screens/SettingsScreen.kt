@@ -37,10 +37,6 @@ import app.zangdale.kanjian.R
 import app.zangdale.kanjian.dataStore
 import app.zangdale.kanjian.ui.SUPPORTS_DARK_MODE_NATIVELY
 import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.AboutTile
-import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.AudioRecorderEncoderTile
-import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.AudioRecorderOutputFormatTile
-import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.AudioRecorderSamplingRateTile
-import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.AudioRecorderShowAllMicrophonesTile
 import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.CustomNotificationTile
 import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.DividerTitle
 import app.zangdale.kanjian.ui.components.SettingsScreen.Tiles.EnableAppLockTile
@@ -60,7 +56,6 @@ import app.zangdale.kanjian.ui.components.atoms.GlobalSwitch
 import app.zangdale.kanjian.ui.components.atoms.MessageBox
 import app.zangdale.kanjian.ui.components.atoms.MessageType
 import app.zangdale.kanjian.ui.effects.rememberSettings
-import app.zangdale.kanjian.ui.models.AudioRecorderModel
 import app.zangdale.kanjian.ui.models.VideoRecorderModel
 import kotlinx.coroutines.launch
 
@@ -70,7 +65,6 @@ fun SettingsScreen(
     onBackNavigate: () -> Unit,
     onNavigateToCustomRecordingNotifications: () -> Unit,
     onNavigateToAboutScreen: () -> Unit,
-    audioRecorder: AudioRecorderModel,
     videoRecorder: VideoRecorderModel,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -126,7 +120,7 @@ fun SettingsScreen(
             val settings = rememberSettings()
 
             // Show alert
-            if (audioRecorder.isInRecording || videoRecorder.isInRecording) {
+            if (videoRecorder.isInRecording) {
                 Box(
                     modifier = Modifier
                         .padding(16.dp)
@@ -170,18 +164,6 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.spacedBy(32.dp),
                 ) {
                     Column {
-                        DividerTitle(
-                            title = stringResource(R.string.ui_settings_sections_audio_title),
-                            description = stringResource(R.string.ui_settings_sections_audio_description),
-                        )
-                        AudioRecorderShowAllMicrophonesTile(settings = settings)
-                        AudioRecorderSamplingRateTile(settings = settings)
-                        AudioRecorderEncoderTile(
-                            snackbarHostState = snackbarHostState,
-                            settings = settings
-                        )
-                        AudioRecorderOutputFormatTile(settings = settings)
-
                         DividerTitle(
                             title = stringResource(R.string.ui_settings_sections_video_title),
                             description = stringResource(R.string.ui_settings_sections_video_description),

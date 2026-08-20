@@ -13,9 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import app.zangdale.kanjian.dataStore
 import app.zangdale.kanjian.db.AppSettings
-import app.zangdale.kanjian.ui.models.AudioRecorderModel
 import app.zangdale.kanjian.ui.models.VideoRecorderModel
 import app.zangdale.kanjian.ui.utils.PermissionHelper
 import kotlinx.coroutines.launch
@@ -46,18 +44,15 @@ object RecorderMediaButtonDispatcher {
 @Composable
 fun RecorderMediaButtonHandler(
     settings: AppSettings,
-    audioRecorder: AudioRecorderModel,
     videoRecorder: VideoRecorderModel,
 ) {
     val context = LocalContext.current
-    val dataStore = context.dataStore
     val scope = rememberCoroutineScope()
     val settingsState = rememberUpdatedState(settings)
-    val audioRecorderState = rememberUpdatedState(audioRecorder)
     val videoRecorderState = rememberUpdatedState(videoRecorder)
     val lastPressTimeMs = remember { AtomicLong(0L) }
 
-    val handleMediaButton = remember(scope, context, dataStore) {
+    val handleMediaButton = remember(scope, context) {
         {
             val now = System.currentTimeMillis()
             if (now - lastPressTimeMs.get() < 500L) {
@@ -66,21 +61,9 @@ fun RecorderMediaButtonHandler(
                 lastPressTimeMs.set(now)
 
                 val currentSettings = settingsState.value
-                val currentAudioRecorder = audioRecorderState.value
                 val currentVideoRecorder = videoRecorderState.value
 
                 when {
-                    currentAudioRecorder.isInRecording -> {
-                        scope.launch {
-                            currentAudioRecorder.stopRecording(context)
-                            runCatching {
-                                currentAudioRecorder.destroyService(context)
-                            }
-                            currentAudioRecorder.onRecordingSave(false)
-                        }
-                        true
-                    }
-
                     currentVideoRecorder.isInRecording -> {
                         scope.launch {
                             currentVideoRecorder.stopRecording(context)
@@ -92,8 +75,8 @@ fun RecorderMediaButtonHandler(
                         true
                     }
 
-                    canStartAudioRecording(context, currentSettings) -> {
-                        currentAudioRecorder.startRecording(context, currentSettings)
+                    canStartVideoRecording(context, currentSettings) -> {
+                        currentVideoRecorder.startRecording(context, currentSettings)
                         true
                     }
 
@@ -154,8 +137,8 @@ fun RecorderMediaButtonHandler(
     }
 }
 
-private fun canStartAudioRecording(context: Context, settings: AppSettings): Boolean {
-    if (!PermissionHelper.hasGranted(context, Manifest.permission.RECORD_AUDIO)) {
+private fun canStartVideoRecording(context: Context, settings: AppSettings): Boolean {
+    if (!PermissionHelper.hasGranted(context, Manifest.permission.CAMERA)) {
         return false
     }
 

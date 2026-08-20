@@ -25,14 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.zangdale.kanjian.R
 import app.zangdale.kanjian.db.AppSettings
-import app.zangdale.kanjian.db.RecordingInformation
-import app.zangdale.kanjian.ui.components.RecorderScreen.organisms.AudioRecordingStatus
 import app.zangdale.kanjian.ui.components.RecorderScreen.organisms.ChargingAutoRecordHandler
 import app.zangdale.kanjian.ui.components.RecorderScreen.organisms.RecorderEventsHandler
 import app.zangdale.kanjian.ui.components.RecorderScreen.organisms.RecorderMediaButtonHandler
 import app.zangdale.kanjian.ui.components.RecorderScreen.organisms.StartRecording
 import app.zangdale.kanjian.ui.components.RecorderScreen.organisms.VideoRecordingStatus
-import app.zangdale.kanjian.ui.models.AudioRecorderModel
 import app.zangdale.kanjian.ui.models.VideoRecorderModel
 import kotlinx.coroutines.launch
 
@@ -40,7 +37,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecorderScreen(
     onNavigateToSettingsScreen: () -> Unit,
-    audioRecorder: AudioRecorderModel,
     videoRecorder: VideoRecorderModel,
     settings: AppSettings,
 ) {
@@ -50,13 +46,11 @@ fun RecorderScreen(
     RecorderEventsHandler(
         settings = settings,
         snackbarHostState = snackbarHostState,
-        audioRecorder = audioRecorder,
         videoRecorder = videoRecorder,
     )
 
     RecorderMediaButtonHandler(
         settings = settings,
-        audioRecorder = audioRecorder,
         videoRecorder = videoRecorder,
     )
 
@@ -113,12 +107,9 @@ fun RecorderScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            if (audioRecorder.isInRecording)
-                AudioRecordingStatus(audioRecorder = audioRecorder)
-            else if (videoRecorder.isInRecording)
+            if (videoRecorder.isInRecording)
                 VideoRecordingStatus(
                     videoRecorder = videoRecorder,
-                    appSettings = settings,
                 )
             else
                 StartRecording(
@@ -126,13 +117,7 @@ fun RecorderScreen(
                     appSettings = settings,
                     onSaveLastRecording = {
                         scope.launch {
-                            when (settings.lastRecording!!.type) {
-                                RecordingInformation.Type.AUDIO ->
-                                    audioRecorder.onRecordingSave(false)
-
-                                RecordingInformation.Type.VIDEO ->
-                                    videoRecorder.onRecordingSave(false)
-                            }
+                            videoRecorder.onRecordingSave(false)
                         }
                     },
                     showVideoPreviewFullscreen = !topBarVisible,

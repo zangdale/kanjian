@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PermMedia
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -61,10 +60,8 @@ import androidx.documentfile.provider.DocumentFile
 import app.zangdale.kanjian.R
 import app.zangdale.kanjian.dataStore
 import app.zangdale.kanjian.db.AppSettings
-import app.zangdale.kanjian.helpers.AudioBatchesFolder
 import app.zangdale.kanjian.helpers.BatchesFolder
 import app.zangdale.kanjian.helpers.VideoBatchesFolder
-import app.zangdale.kanjian.ui.AUDIO_RECORDING_BATCHES_SUBFOLDER_NAME
 import app.zangdale.kanjian.ui.MEDIA_SUBFOLDER_NAME
 import app.zangdale.kanjian.ui.RECORDER_MEDIA_SELECTED_VALUE
 import app.zangdale.kanjian.ui.SHEET_BOTTOM_OFFSET
@@ -375,31 +372,6 @@ fun DCIMFolderExplanationDialog(
                             .padding(16.dp)
                     ) {
                         Icon(
-                            Icons.Default.Mic,
-                            contentDescription = null,
-                        )
-                        FolderBreadcrumbs(
-                            folders = listOf(
-                                if (SUPPORTS_SCOPED_STORAGE)
-                                    AudioBatchesFolder.BASE_SCOPED_STORAGE_RELATIVE_PATH
-                                else
-                                    AudioBatchesFolder.BASE_LEGACY_STORAGE_FOLDER,
-                                MEDIA_SUBFOLDER_NAME
-                            )
-                        )
-                        Box {}
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .padding(16.dp)
-                    ) {
-                        Icon(
                             Icons.Default.CameraAlt,
                             contentDescription = null,
                         )
@@ -418,7 +390,6 @@ fun DCIMFolderExplanationDialog(
                 Text(
                     stringResource(
                         R.string.ui_settings_option_saveFolder_explainMediaFolder_subfoldersExplanation,
-                        AUDIO_RECORDING_BATCHES_SUBFOLDER_NAME,
                         VIDEO_RECORDING_BATCHES_SUBFOLDER_NAME
                     ),
                     style = MaterialTheme.typography.bodySmall,

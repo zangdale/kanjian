@@ -36,7 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.zangdale.kanjian.R
 import app.zangdale.kanjian.dataStore
-import app.zangdale.kanjian.db.AudioRecorderSettings
+import app.zangdale.kanjian.db.AppSettings
 import app.zangdale.kanjian.ui.utils.IconResource
 import com.maxkeppeker.sheets.core.models.base.Header
 import com.maxkeppeker.sheets.core.models.base.IconSource
@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 fun MaxDurationSelector(
     modifier: Modifier = Modifier,
 ) {
-    val OPTIONS = AudioRecorderSettings.EXAMPLE_MAX_SEGMENTS
+    val OPTIONS = AppSettings.EXAMPLE_MAX_SEGMENTS
 
     val scope = rememberCoroutineScope()
     val dataStore = LocalContext.current.dataStore

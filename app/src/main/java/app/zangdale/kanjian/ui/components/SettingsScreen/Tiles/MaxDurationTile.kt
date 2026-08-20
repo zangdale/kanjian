@@ -17,7 +17,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import app.zangdale.kanjian.R
 import app.zangdale.kanjian.dataStore
 import app.zangdale.kanjian.db.AppSettings
-import app.zangdale.kanjian.db.AudioRecorderSettings
 import app.zangdale.kanjian.ui.components.atoms.ExampleListRoulette
 import app.zangdale.kanjian.ui.components.atoms.SettingsTile
 import app.zangdale.kanjian.ui.utils.IconResource
@@ -120,7 +119,7 @@ fun MaxDurationTile(
         },
         extra = {
             ExampleListRoulette(
-                items = AudioRecorderSettings.EXAMPLE_MAX_SEGMENTS,
+                items = AppSettings.EXAMPLE_MAX_SEGMENTS,
                 onItemSelected = ::updateValue,
             ) { maxSegments ->
                 Text(

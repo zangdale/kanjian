@@ -21,7 +21,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.zangdale.kanjian.dataStore
 import app.zangdale.kanjian.ui.enums.Screen
-import app.zangdale.kanjian.ui.models.AudioRecorderModel
 import app.zangdale.kanjian.ui.models.VideoRecorderModel
 import app.zangdale.kanjian.ui.screens.AboutScreen
 import app.zangdale.kanjian.ui.screens.CustomRecordingNotificationsScreen
@@ -34,7 +33,6 @@ const val DEBUG_SKIP_WELCOME = false;
 
 @Composable
 fun Navigation(
-    audioRecorder: AudioRecorderModel = viewModel(),
     videoRecorder: VideoRecorderModel = viewModel(),
 ) {
     val navController = rememberNavController()
@@ -46,11 +44,9 @@ fun Navigation(
         .value ?: return
 
     DisposableEffect(Unit) {
-        audioRecorder.bindToService(context)
         videoRecorder.bindToService(context)
 
         onDispose {
-            audioRecorder.unbindFromService(context)
             videoRecorder.unbindFromService(context)
         }
     }
@@ -59,21 +55,21 @@ fun Navigation(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background),
         navController = navController,
-        startDestination = if (settings.hasSeenOnboarding || DEBUG_SKIP_WELCOME) Screen.AudioRecorder.route else Screen.Welcome.route,
+        startDestination = if (settings.hasSeenOnboarding || DEBUG_SKIP_WELCOME) Screen.Recorder.route else Screen.Welcome.route,
     ) {
         composable(Screen.Welcome.route) {
             WelcomeScreen(
-                onNavigateToAudioRecorderScreen = {
+                onNavigateToRecorderScreen = {
                     val mainHandler = ContextCompat.getMainExecutor(context)
 
                     mainHandler.execute {
-                        navController.navigate(Screen.AudioRecorder.route)
+                        navController.navigate(Screen.Recorder.route)
                     }
                 },
             )
         }
         composable(
-            Screen.AudioRecorder.route,
+            Screen.Recorder.route,
             enterTransition = {
                 when (initialState.destination.route) {
                     Screen.Welcome.route -> null
@@ -88,7 +84,6 @@ fun Navigation(
                 onNavigateToSettingsScreen = {
                     navController.navigate(Screen.Settings.route)
                 },
-                audioRecorder = audioRecorder,
                 videoRecorder = videoRecorder,
                 settings = settings,
             )
@@ -108,7 +103,6 @@ fun Navigation(
                     navController.navigate(Screen.CustomRecordingNotifications.route)
                 },
                 onNavigateToAboutScreen = { navController.navigate(Screen.About.route) },
-                audioRecorder = audioRecorder,
                 videoRecorder = videoRecorder,
             )
         }

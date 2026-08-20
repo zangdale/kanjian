@@ -2,12 +2,10 @@ package app.zangdale.kanjian.db
 
 import android.Manifest
 import android.content.Context
-import android.media.MediaRecorder
 import android.os.Build
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import app.zangdale.kanjian.R
-import app.zangdale.kanjian.helpers.AudioBatchesFolder
 import app.zangdale.kanjian.helpers.VideoBatchesFolder
 import app.zangdale.kanjian.ui.RECORDER_MEDIA_SELECTED_VALUE
 import app.zangdale.kanjian.ui.SUPPORTS_SCOPED_STORAGE
@@ -19,7 +17,6 @@ import java.time.LocalDateTime
 
 @Serializable
 data class AppSettings(
-    val audioRecorderSettings: AudioRecorderSettings = AudioRecorderSettings.getDefaultInstance(),
     val videoRecorderSettings: VideoRecorderSettings = VideoRecorderSettings.getDefaultInstance(),
 
     val appLockSettings: AppLockSettings? = null,
@@ -55,10 +52,6 @@ data class AppSettings(
 ) {
     fun setShowAdvancedSettings(showAdvancedSettings: Boolean): AppSettings {
         return copy(showAdvancedSettings = showAdvancedSettings)
-    }
-
-    fun setAudioRecorderSettings(audioRecorderSettings: AudioRecorderSettings): AppSettings {
-        return copy(audioRecorderSettings = audioRecorderSettings)
     }
 
     fun setVideoRecorderSettings(videoRecorderSettings: VideoRecorderSettings): AppSettings {
@@ -192,6 +185,15 @@ data class AppSettings(
                 data,
             )
         }
+
+        val EXAMPLE_MAX_SEGMENTS = listOf(5, 15, 30, 60, 120)
+        val EXAMPLE_DURATION_TIMES = listOf(
+            60 * 1000L,
+            60 * 2 * 1000L,
+            60 * 5 * 1000L,
+            60 * 10 * 1000L,
+            60 * 15 * 1000L,
+        )
     }
 }
 
@@ -204,18 +206,12 @@ data class RecordingInformation(
     val maxDuration: Long,
     val intervalDuration: Long,
     val fileExtension: String,
-    val type: Type,
     val watermarkLatitude: Double? = null,
     val watermarkLongitude: Double? = null,
 ) {
     fun hasRecordingsAvailable(context: Context): Boolean =
-        when (type) {
-            Type.AUDIO -> AudioBatchesFolder.importFromFolder(folderPath, context)
-                .hasRecordingsAvailable()
-
-            Type.VIDEO -> VideoBatchesFolder.importFromFolder(folderPath, context)
-                .hasRecordingsAvailable()
-        }
+        VideoBatchesFolder.importFromFolder(folderPath, context)
+            .hasRecordingsAvailable()
 
     fun getStartDateForFilename(filenameFormat: AppSettings.FilenameFormat): LocalDateTime {
         return when (filenameFormat) {
@@ -232,256 +228,6 @@ data class RecordingInformation(
         // This is not accurate, since the last batch may be shorter than the others
         // but it's good enough
         return intervalDuration * batchesAmount - (intervalDuration * 0.5).toLong()
-    }
-
-    enum class Type {
-        AUDIO,
-        VIDEO,
-    }
-}
-
-@Serializable
-data class AudioRecorderSettings(
-    // 320 Kbps
-    val bitRate: Int = 320000,
-    val samplingRate: Int? = null,
-    val outputFormat: Int? = null,
-    val encoder: Int? = null,
-    val showAllMicrophones: Boolean = false,
-) {
-    fun getOutputFormat(): Int {
-        if (outputFormat != null) {
-            return outputFormat
-        }
-
-        if (encoder == null) {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                MediaRecorder.OutputFormat.AAC_ADTS
-            else MediaRecorder.OutputFormat.THREE_GPP
-        }
-
-        return when (encoder) {
-            MediaRecorder.AudioEncoder.AAC -> MediaRecorder.OutputFormat.AAC_ADTS
-            MediaRecorder.AudioEncoder.AAC_ELD -> MediaRecorder.OutputFormat.AAC_ADTS
-            MediaRecorder.AudioEncoder.AMR_NB -> MediaRecorder.OutputFormat.AMR_NB
-            MediaRecorder.AudioEncoder.AMR_WB -> MediaRecorder.OutputFormat.AMR_WB
-            MediaRecorder.AudioEncoder.HE_AAC -> MediaRecorder.OutputFormat.AAC_ADTS
-            MediaRecorder.AudioEncoder.VORBIS -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    MediaRecorder.OutputFormat.OGG
-                } else {
-                    MediaRecorder.OutputFormat.AAC_ADTS
-                }
-            }
-
-            MediaRecorder.AudioEncoder.OPUS -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    MediaRecorder.OutputFormat.OGG
-                } else {
-                    MediaRecorder.OutputFormat.AAC_ADTS
-                }
-            }
-
-            else -> MediaRecorder.OutputFormat.DEFAULT
-        }
-    }
-
-    fun getMimeType(): String = when (getOutputFormat()) {
-        MediaRecorder.OutputFormat.AAC_ADTS -> "audio/aac"
-        MediaRecorder.OutputFormat.THREE_GPP -> "audio/3gpp"
-        MediaRecorder.OutputFormat.MPEG_4 -> "audio/mp4"
-        MediaRecorder.OutputFormat.MPEG_2_TS -> "audio/ts"
-        MediaRecorder.OutputFormat.WEBM -> "audio/webm"
-        MediaRecorder.OutputFormat.AMR_NB -> "audio/amr"
-        MediaRecorder.OutputFormat.AMR_WB -> "audio/amr-wb"
-        MediaRecorder.OutputFormat.OGG -> "audio/ogg"
-        else -> "audio/3gpp"
-    }
-
-    fun getSamplingRate(): Int = samplingRate ?: when (getOutputFormat()) {
-        MediaRecorder.OutputFormat.AAC_ADTS -> 96000
-        MediaRecorder.OutputFormat.THREE_GPP -> 44100
-        MediaRecorder.OutputFormat.MPEG_4 -> 44100
-        MediaRecorder.OutputFormat.MPEG_2_TS -> 48000
-        MediaRecorder.OutputFormat.WEBM -> 48000
-        MediaRecorder.OutputFormat.AMR_NB -> 8000
-        MediaRecorder.OutputFormat.AMR_WB -> 16000
-        MediaRecorder.OutputFormat.OGG -> 48000
-        else -> 48000
-    }
-
-    fun getEncoder(): Int = encoder ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        MediaRecorder.AudioEncoder.AAC
-    else
-        MediaRecorder.AudioEncoder.AMR_NB
-
-    fun setBitRate(bitRate: Int): AudioRecorderSettings {
-        if (bitRate !in 1000..320000) {
-            throw Exception("Bit rate must be between 1000 and 320000")
-        }
-
-        return copy(bitRate = bitRate)
-    }
-
-    fun setSamplingRate(samplingRate: Int?): AudioRecorderSettings {
-        if (samplingRate != null && samplingRate < 1000) {
-            throw Exception("Sampling rate must be at least 1000")
-        }
-
-        return copy(samplingRate = samplingRate)
-    }
-
-    fun setOutputFormat(outputFormat: Int?): AudioRecorderSettings {
-        if (outputFormat != null && (outputFormat < 0 || outputFormat > 11)) {
-            throw Exception("OutputFormat is not a MediaRecorder.OutputFormat constant")
-        }
-
-        return copy(outputFormat = outputFormat)
-    }
-
-    fun setEncoder(encoder: Int?): AudioRecorderSettings {
-        if (encoder != null && (encoder < 0 || encoder > 7)) {
-            throw Exception("Encoder is not a MediaRecorder.AudioEncoder constant")
-        }
-
-        return copy(encoder = encoder)
-    }
-
-    fun setShowAllMicrophones(showAllMicrophones: Boolean): AudioRecorderSettings {
-        return copy(showAllMicrophones = showAllMicrophones)
-    }
-
-    fun isEncoderCompatible(encoder: Int): Boolean {
-        if (outputFormat == null || outputFormat == MediaRecorder.OutputFormat.DEFAULT) {
-            return true
-        }
-
-        val supportedFormats = ENCODER_SUPPORTED_OUTPUT_FORMATS_MAP[encoder]!!
-
-        return supportedFormats.contains(outputFormat)
-    }
-
-    val fileExtension: String
-        get() = when (getOutputFormat()) {
-            MediaRecorder.OutputFormat.AAC_ADTS -> "aac"
-            MediaRecorder.OutputFormat.THREE_GPP -> "3gp"
-            MediaRecorder.OutputFormat.MPEG_4 -> "mp4"
-            MediaRecorder.OutputFormat.MPEG_2_TS -> "ts"
-            MediaRecorder.OutputFormat.WEBM -> "webm"
-            MediaRecorder.OutputFormat.AMR_NB -> "amr"
-            MediaRecorder.OutputFormat.AMR_WB -> "awb"
-            MediaRecorder.OutputFormat.OGG -> "ogg"
-            else -> "raw"
-        }
-
-    companion object {
-        fun getDefaultInstance(): AudioRecorderSettings = AudioRecorderSettings()
-        val EXAMPLE_MAX_DURATIONS = listOf(
-            1 * 60 * 1000L,
-            5 * 60 * 1000L,
-            15 * 60 * 1000L,
-            30 * 60 * 1000L,
-            60 * 60 * 1000L,
-        )
-        val EXAMPLE_MAX_SEGMENTS = listOf(5, 15, 30, 60, 120)
-        val EXAMPLE_DURATION_TIMES = listOf(
-            60 * 1000L,
-            60 * 2 * 1000L,
-            60 * 5 * 1000L,
-            60 * 10 * 1000L,
-            60 * 15 * 1000L,
-        )
-        val EXAMPLE_BITRATE_VALUES = listOf(
-            96 * 1000,
-            128 * 1000,
-            160 * 1000,
-            192 * 1000,
-            256 * 1000,
-            320 * 1000,
-        )
-        val EXAMPLE_SAMPLING_RATE = listOf(
-            null,
-            8000,
-            16000,
-            22050,
-            44100,
-            48000,
-            96000,
-        )
-        val OUTPUT_FORMAT_INDEX_TEXT_MAP = mapOf(
-            0 to "Default",
-            1 to "THREE_GPP",
-            2 to "MPEG_4",
-            3 to "AMR_NB",
-            4 to "AMR_WB",
-            5 to "AAC_ADIF",
-            6 to "AAC_ADTS",
-            7 to "OUTPUT_FORMAT_RTP_AVP",
-            8 to "MPEG_2_TS",
-            9 to "WEBM",
-            10 to "HEIF",
-            11 to "OGG",
-        )
-        val ENCODER_INDEX_TEXT_MAP = mapOf(
-            0 to "Default",
-            1 to "AMR_NB",
-            2 to "AMR_WB",
-            3 to "AAC",
-            4 to "HE_AAC",
-            5 to "AAC_ELD",
-            6 to "VORBIS",
-            7 to "OPUS",
-        )
-        val ENCODER_SUPPORTED_OUTPUT_FORMATS_MAP: Map<Int, Array<Int>> = mutableMapOf(
-            MediaRecorder.AudioEncoder.DEFAULT to arrayOf(
-                MediaRecorder.OutputFormat.DEFAULT,
-            ),
-            MediaRecorder.AudioEncoder.AAC to arrayOf(
-                MediaRecorder.OutputFormat.THREE_GPP,
-                MediaRecorder.OutputFormat.MPEG_4,
-                MediaRecorder.OutputFormat.AAC_ADTS,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) MediaRecorder.OutputFormat.MPEG_2_TS else null,
-            ).filterNotNull().toTypedArray(),
-            MediaRecorder.AudioEncoder.AAC_ELD to arrayOf(
-                MediaRecorder.OutputFormat.THREE_GPP,
-                MediaRecorder.OutputFormat.MPEG_4,
-                MediaRecorder.OutputFormat.AAC_ADTS,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) MediaRecorder.OutputFormat.MPEG_2_TS else null,
-            ).filterNotNull().toTypedArray(),
-            MediaRecorder.AudioEncoder.AMR_NB to arrayOf(
-                MediaRecorder.OutputFormat.THREE_GPP,
-                MediaRecorder.OutputFormat.AMR_NB,
-            ),
-            MediaRecorder.AudioEncoder.AMR_WB to arrayOf(
-                MediaRecorder.OutputFormat.THREE_GPP,
-                MediaRecorder.OutputFormat.AMR_WB,
-            ),
-            MediaRecorder.AudioEncoder.HE_AAC to arrayOf(
-                MediaRecorder.OutputFormat.THREE_GPP,
-                MediaRecorder.OutputFormat.MPEG_4,
-                MediaRecorder.OutputFormat.AAC_ADTS,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) MediaRecorder.OutputFormat.MPEG_2_TS else null,
-            ).filterNotNull().toTypedArray(),
-            MediaRecorder.AudioEncoder.VORBIS to arrayOf(
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) MediaRecorder.OutputFormat.OGG else null,
-                MediaRecorder.OutputFormat.MPEG_4
-            ).filterNotNull().toTypedArray(),
-        ).apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaRecorder.AudioEncoder.OPUS, arrayOf(MediaRecorder.OutputFormat.OGG))
-            }
-        }.toMap()
-        val OUTPUT_FORMATS_SUPPORTED_ENCODER_MAP = (mutableMapOf<Int, Array<Int>>().also { map ->
-            ENCODER_SUPPORTED_OUTPUT_FORMATS_MAP.forEach { (encoder, formats) ->
-                formats.forEach { format ->
-                    if (map.containsKey(format)) {
-                        map[format]!!.plus(encoder)
-                    } else {
-                        map[format] = arrayOf(encoder)
-                    }
-                }
-            }
-        }).toMap()
     }
 }
 
@@ -665,7 +411,7 @@ data class NotificationSettings(
     ) {
         @Serializable
         data object Default : Preset(
-            R.string.ui_audioRecorder_state_recording_title,
+            R.string.ui_videoRecorder_state_recording_title,
             R.string.ui_recorder_state_recording_description,
             true,
             R.drawable.launcher_monochrome_noopacity,

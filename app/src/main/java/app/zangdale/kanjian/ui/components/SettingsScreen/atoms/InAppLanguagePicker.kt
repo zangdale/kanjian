@@ -25,7 +25,6 @@ import androidx.core.os.LocaleListCompat
 import app.zangdale.kanjian.R
 import app.zangdale.kanjian.SUPPORTED_LOCALES
 import app.zangdale.kanjian.db.AppSettings
-import app.zangdale.kanjian.db.AudioRecorderSettings
 import app.zangdale.kanjian.ui.components.atoms.SettingsTile
 import app.zangdale.kanjian.ui.utils.IconResource
 import com.maxkeppeker.sheets.core.models.base.ButtonStyle

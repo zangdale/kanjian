@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import app.zangdale.kanjian.R
 import app.zangdale.kanjian.dataStore
 import app.zangdale.kanjian.db.AppSettings
-import app.zangdale.kanjian.db.AudioRecorderSettings
 import app.zangdale.kanjian.ui.components.atoms.ExampleListRoulette
 import app.zangdale.kanjian.ui.components.atoms.SettingsTile
 import app.zangdale.kanjian.ui.utils.IconResource
@@ -90,7 +89,7 @@ fun IntervalDurationTile(
         },
         extra = {
             ExampleListRoulette(
-                items = AudioRecorderSettings.EXAMPLE_DURATION_TIMES,
+                items = AppSettings.EXAMPLE_DURATION_TIMES,
                 onItemSelected = ::updateValue,
             ) { duration ->
                 Text(

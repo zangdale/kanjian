@@ -41,12 +41,13 @@ fun RecordingStatus(
     recordingStart: LocalDateTime,
     maxDuration: Long,
     progressModifier: Modifier = Modifier.width(300.dp),
+    compact: Boolean = false,
 ) {
     val animateIn = rememberInitialRecordingAnimation(recordingTime)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 16.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

@@ -20,9 +20,6 @@
     <string name="ui_permissions_request">Please grant the permission to continue</string>
     <string name="ui_permissions_permanentlyDenied_message">You will be redirected to the app settings to grant the permission there.</string>
 
-    <string name="ui_audioRecorder_action_start_label">Start Audio Recording</string>
-    <string name="ui_audioRecorder_state_recording_title">Recording Audio</string>
-
     <string name="ui_recorder_action_saveOldRecording_label">Save Recording from <xliff:g name="date">%s</xliff:g></string>
     <string name="ui_recorder_action_delete_label">Delete</string>
     <string name="ui_recorder_action_delete_confirm_title">Delete Recording?</string>
@@ -52,9 +49,8 @@
     <string name="ui_recorder_state_recording_fake_vpn_title">Connected to VPN</string>
     <string name="ui_recorder_state_recording_fake_vpn_description">Connection Secured</string>
 
-
     <string name="ui_welcome_explanation_title">Welcome to Kanjian!</string>
-    <string name="ui_welcome_explanation_message">Kanjian is like a dashcam for your phone. It allows you to record audio and video continuously and save the last 30 minutes at your request.</string>
+    <string name="ui_welcome_explanation_message">Kanjian is like a dashcam for your phone. It allows you to record video continuously and save the last 30 minutes at your request.</string>
     <string name="ui_welcome_responsibility_title">You are solely responsible for the use of this app</string>
     <string name="ui_welcome_responsibility_message">Kanjian does not take any responsibility for the use of this app. You are solely responsible. Use it at your own risk.</string>
     <string name="ui_welcome_start_label">Start Kanjian</string>
@@ -69,15 +65,7 @@
     <string name="ui_settings_option_maxDuration_value"><xliff:g name="count">%d</xliff:g> segments</string>
     <string name="ui_settings_option_intervalDuration_title">Auto-save interval</string>
     <string name="ui_settings_option_intervalDuration_description">Automatically save a segment at this interval. When the max segment count is reached, the oldest segment is overwritten.</string>
-    <string name="ui_settings_option_bitrate_title">Bitrate</string>
     <string name="ui_settings_option_bitrate_description">A higher bitrate means better quality but also larger file size</string>
-    <string name="ui_settings_option_bitrate_explanation">Set the bitrate for the audio recording</string>
-    <string name="ui_settings_option_outputFormat_title">Output Format</string>
-    <string name="ui_settings_option_samplingRate_title">Sampling rate</string>
-    <string name="ui_settings_option_samplingRate_description">Define how many samples per second are taken from the audio signal</string>
-    <string name="ui_settings_option_samplingRate_explanation">Set the sampling rate</string>
-    <string name="ui_settings_option_encoder_title">Encoder</string>
-    <string name="ui_settings_option_encoder_extra_outputFormatChanged">Output Format has been changed because the current one was incompatible with this encoder</string>
     <string name="ui_settings_value_auto_label">Auto</string>
     <string name="ui_recorder_state_paused_title">Recording paused</string>
     <string name="ui_recorder_state_paused_description">Kanjian is paused</string>
@@ -85,15 +73,6 @@
     <string name="ui_recorder_error_recording_description">Kanjian encountered an error during recording. Try using different settings or restart the app.</string>
     <string name="ui_settings_language_title">Language</string>
     <string name="ui_settings_language_update_label">Change</string>
-    <string name="ui_audioRecorder_info_microphone_deviceMicrophone">Device Microphone</string>
-    <string name="ui_audioRecorder_info_microphone_changeExplanation">The selected microphone will be activated immediately</string>
-    <string name="ui_audioRecorder_error_microphoneDisconnected_title">Microphone disconnected</string>
-    <string name="ui_audioRecorder_error_microphoneDisconnected_message"><xliff:g name="name">%s</xliff:g> disconnected. Kanjian will use the default microphone instead. We will automatically switch back to <xliff:g name="nam">%s</xliff:g> once it reconnects.</string>
-    <string name="ui_audioRecorder_error_microphoneReconnected_title">Microphone reconnected</string>
-    <string name="ui_audioRecorder_error_microphoneReconnected_message"><xliff:g name="name">%s</xliff:g> reconnected! Kanjian automatically changed the microphone input to it.</string>
-    <string name="ui_settings_option_showAllMicrophones_title">Show hidden microphones</string>
-    <string name="ui_settings_option_showAllMicrophones_description">Show all microphones, including internal ones</string>
-    <string name="ui_audioRecorder_info_microphone_hiddenMicrophones">Hidden Microphones</string>
     <string name="ui_settings_option_import_label">Import Settings</string>
     <string name="ui_settings_option_export_label">Export Settings</string>
     <string name="ui_settings_option_import_dialog_text">Are you sure you want to import these settings? Your current settings will be overwritten!</string>
@@ -141,8 +120,6 @@
     <string name="ui_settings_option_saveFolder_warning_text">By default, Kanjian will save the recording batches into its private, encrypted file storage. You can change this and specify an external, unencrypted folder. This will allow you to access the batches manually. ONLY DO THIS IF YOU KNOW WHAT YOU ARE DOING!</string>
     <string name="ui_settings_option_saveFolder_warning_action_confirm">Yes, change folder</string>
     <string name="ui_settings_option_saveFolder_action_default_label">Use private, encrypted storage</string>
-    <string name="ui_settings_sections_audio_title">Audio Recording</string>
-    <string name="ui_settings_sections_audio_description">Only applies to audio recordings</string>
     <string name="ui_settings_sections_video_title">Video Recording</string>
     <string name="ui_settings_sections_video_description">Only applies to video recordings</string>
     <string name="ui_settings_option_videoTargetedBitrate_title">Targeted Bitrate</string>
@@ -235,7 +212,7 @@
     <string name="ui_settings_option_saveFolder_openFolder_label">Open selected folder in file manager</string>
     <string name="ui_settings_option_saveFolder_explainMediaFolder_label">Where are my batches stored?</string>
     <string name="ui_settings_option_saveFolder_explainMediaFolder_generalExplanation">To view your batches, open the Files app, go to the internal storage and then you will find your batches in following folders:</string>
-    <string name="ui_settings_option_saveFolder_explainMediaFolder_subfoldersExplanation">The final merged recordings will be saved in those folders. Each recording creates a subfolder to store the short batches in (\"%s\" for audio recordings, \"%s\" for video recordings). To view the individual batches, you may need to enable hidden files in the Files app.</string>
+    <string name="ui_settings_option_saveFolder_explainMediaFolder_subfoldersExplanation">The final merged recordings will be saved in those folders. Each recording creates a subfolder to store the short batches in (\"%s\"). To view the individual batches, you may need to enable hidden files in the Files app.</string>
     <string name="ui_settings_option_saveFolder_explainMediaFolder_openFolderExplanation">Tap on a folder to open it in the Files app</string>
     <string name="ui_videoRecorder_action_start_settings_cameraLens_unknown_label">Unknown</string>
     <string name="ui_settings_option_saveFolder_explainInternalFolder_explanation">To protect your privacy, Kanjian stores its batches into its own private, encrypted storage. This storage is only accessible by Kanjian and can\'t be accessed by other apps or by a possible intruder. Once you save the recording, you will be asked where you want to save the recording to.</string>

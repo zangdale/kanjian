@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Icon
@@ -33,8 +35,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.zangdale.kanjian.R
-import app.zangdale.kanjian.db.AppSettings
-import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.ChargingAutoRecordSwitch
 import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.SaveCurrentNowModal
 import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.TorchStatus
 import app.zangdale.kanjian.ui.components.RecorderScreen.molecules.RecordingControl
@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun VideoRecordingStatus(
     videoRecorder: VideoRecorderModel,
-    appSettings: AppSettings,
 ) {
     val orientation = LocalConfiguration.current.orientation
 
@@ -57,41 +56,34 @@ fun VideoRecordingStatus(
     when (orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement
-                        .spacedBy(32.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth(0.9f)
-                        .align(Alignment.CenterVertically),
+                        .fillMaxHeight()
+                        .widthIn(max = 420.dp),
                 ) {
                     _VideoGeneralInfo(videoRecorder)
                     _VideoRecordingStatus(videoRecorder)
                 }
-                Box(
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center,
+                        .fillMaxHeight()
+                        .widthIn(max = 420.dp),
                 ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        ChargingAutoRecordSwitch(
-                            settings = appSettings,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
-                        )
-                        _VideoControls(videoRecorder)
-                        _PrimitiveControls(videoRecorder)
-                    }
+                    _VideoControls(videoRecorder)
+                    _PrimitiveControls(videoRecorder)
                 }
             }
         }
@@ -108,31 +100,22 @@ fun VideoRecordingStatus(
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement
-                        .spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     _VideoGeneralInfo(videoRecorder)
                     _VideoRecordingStatus(videoRecorder)
                 }
 
                 Column(
-                    verticalArrangement = Arrangement
-                        .spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    ChargingAutoRecordSwitch(
-                        settings = appSettings,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                    )
                     _VideoControls(videoRecorder)
                     _PrimitiveControls(videoRecorder)
                 }
             }
         }
     }
-
 }
 
 @Composable
@@ -140,16 +123,16 @@ fun _VideoGeneralInfo(videoRecorder: VideoRecorderModel) {
     val context = LocalContext.current
     val availableCameras = CameraInfo.queryAvailableCameras(context)
     val orientation = LocalConfiguration.current.orientation
+    val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
 
     Column(
-        verticalArrangement = Arrangement
-            .spacedBy(if (orientation == Configuration.ORIENTATION_LANDSCAPE) 12.dp else 24.dp),
+        verticalArrangement = Arrangement.spacedBy(if (isLandscape) 8.dp else 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
             Icons.Default.CameraAlt,
             contentDescription = null,
-            modifier = Modifier.size(if (orientation == Configuration.ORIENTATION_LANDSCAPE) 48.dp else 64.dp)
+            modifier = Modifier.size(if (isLandscape) 40.dp else 64.dp)
         )
 
         if (videoRecorder.isStartingRecording) {
@@ -193,11 +176,20 @@ fun _VideoGeneralInfo(videoRecorder: VideoRecorderModel) {
 
 @Composable
 fun _VideoRecordingStatus(videoRecorder: VideoRecorderModel) {
+    val isLandscape =
+        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     RecordingStatus(
         recordingTime = videoRecorder.recordingTime,
         progress = videoRecorder.progress,
         recordingStart = videoRecorder.recordingStart,
         maxDuration = videoRecorder.settings!!.effectiveRetentionMs(),
+        progressModifier = if (isLandscape) {
+            Modifier.fillMaxWidth(0.9f)
+        } else {
+            Modifier.width(300.dp)
+        },
+        compact = isLandscape,
     )
 }
 

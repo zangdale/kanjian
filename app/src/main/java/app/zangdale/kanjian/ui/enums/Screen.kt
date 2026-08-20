@@ -1,7 +1,7 @@
 package app.zangdale.kanjian.ui.enums
 
 sealed class Screen(val route: String) {
-    data object AudioRecorder : Screen("audio-recorder")
+    data object Recorder : Screen("recorder")
     data object Settings : Screen("settings")
     data object Welcome : Screen("welcome")
     data object CustomRecordingNotifications : Screen("custom-recording-notifications")

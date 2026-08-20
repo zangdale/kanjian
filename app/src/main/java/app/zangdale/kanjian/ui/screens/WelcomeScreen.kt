@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WelcomeScreen(
-    onNavigateToAudioRecorderScreen: () -> Unit
+    onNavigateToRecorderScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val dataStore = context.dataStore
@@ -41,7 +41,7 @@ fun WelcomeScreen(
             dataStore.updateData {
                 settings.setHasSeenOnboarding(true)
             }
-            onNavigateToAudioRecorderScreen()
+            onNavigateToRecorderScreen()
         }
     }
 

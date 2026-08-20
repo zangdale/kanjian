@@ -18,7 +18,6 @@ import app.zangdale.kanjian.R
 import app.zangdale.kanjian.dataStore
 import app.zangdale.kanjian.db.AppSettings
 import app.zangdale.kanjian.db.RecordingInformation
-import app.zangdale.kanjian.helpers.AudioBatchesFolder
 import app.zangdale.kanjian.helpers.BatchesFolder
 import app.zangdale.kanjian.helpers.VideoBatchesFolder
 import app.zangdale.kanjian.services.IntervalRecorderService
@@ -27,7 +26,6 @@ import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.BatchesInaccessib
 import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.RecorderErrorDialog
 import app.zangdale.kanjian.ui.components.RecorderScreen.atoms.RecorderProcessingDialog
 import app.zangdale.kanjian.ui.effects.rememberOpenUri
-import app.zangdale.kanjian.ui.models.AudioRecorderModel
 import app.zangdale.kanjian.ui.models.BaseRecorderModel
 import app.zangdale.kanjian.ui.models.VideoRecorderModel
 import app.zangdale.kanjian.ui.utils.rememberFileSaverDialog
@@ -49,7 +47,6 @@ typealias RecorderModel = BaseRecorderModel<
 fun RecorderEventsHandler(
     settings: AppSettings,
     snackbarHostState: SnackbarHostState,
-    audioRecorder: AudioRecorderModel,
     videoRecorder: VideoRecorderModel,
 ) {
     val scope = rememberCoroutineScope()
@@ -62,15 +59,6 @@ fun RecorderEventsHandler(
 
     var processingProgress by remember { mutableStateOf<Float?>(null) }
 
-    val saveAudioFile = rememberFileSaverDialog(settings.audioRecorderSettings.getMimeType()) {
-        if (audioRecorder.batchesFolder?.hasRecordingsAvailable() == false) {
-            scope.launch {
-                dataStore.updateData {
-                    it.setLastRecording(null)
-                }
-            }
-        }
-    }
     val saveVideoFile = rememberFileSaverDialog(settings.videoRecorderSettings.getMimeType()) {
         if (videoRecorder.batchesFolder?.hasRecordingsAvailable() == false) {
             scope.launch {
@@ -182,11 +170,6 @@ fun RecorderEventsHandler(
                             ?: throw Exception("No recording information available")
 
                     val batchesFolder = when (recorder.javaClass) {
-                        AudioRecorderModel::class.java -> AudioBatchesFolder.importFromFolder(
-                            recording.folderPath,
-                            context
-                        )
-
                         VideoRecorderModel::class.java -> VideoBatchesFolder.importFromFolder(
                             recording.folderPath,
                             context
@@ -218,19 +201,9 @@ fun RecorderEventsHandler(
                     // Save file
                     when (batchesFolder.type) {
                         BatchesFolder.BatchType.INTERNAL -> {
-                            when (batchesFolder) {
-                                is AudioBatchesFolder -> {
-                                    saveAudioFile(
-                                        batchesFolder.asInternalGetOutputFile(fileName), fileName
-                                    )
-                                }
-
-                                is VideoBatchesFolder -> {
-                                    saveVideoFile(
-                                        batchesFolder.asInternalGetOutputFile(fileName), fileName
-                                    )
-                                }
-                            }
+                            saveVideoFile(
+                                batchesFolder.asInternalGetOutputFile(fileName), fileName
+                            )
                         }
 
                         BatchesFolder.BatchType.CUSTOM -> {
@@ -257,65 +230,6 @@ fun RecorderEventsHandler(
         }
 
         return completer
-    }
-
-    // Register audio recorder events
-    // Absolutely no idea, but somehow on some devices the `DisposableEffect`
-    // is registered twice, and THEN disposed once (AFTER being called twice),
-    // which then causes the `onRecordingSave` to be in a weird state.
-    // This variable is a workaround to prevent this from happening.
-    var previousAudioSettings: AppSettings? = null
-    DisposableEffect(settings) {
-        if (previousAudioSettings == settings) {
-            onDispose { }
-        } else {
-            previousAudioSettings = settings
-            audioRecorder.onRecordingSave = { cleanupOldFiles ->
-                if (audioRecorder.recorderService == null &&
-                    settings.lastRecording?.hasRecordingsAvailable(context) == true
-                ) {
-                    saveRecording(audioRecorder as RecorderModel, cleanupOldFiles)
-                } else {
-                    notifySegmentSaved()
-                }
-            }
-            audioRecorder.onRecordingStart = {
-                snackbarHostState.currentSnackbarData?.dismiss()
-            }
-            audioRecorder.onError = {
-                scope.launch {
-                    saveAsLastRecording(audioRecorder as RecorderModel)
-
-                    runCatching {
-                        audioRecorder.stopRecording(context)
-                    }
-                    runCatching {
-                        audioRecorder.destroyService(context)
-                    }
-
-                    showRecorderError = true
-                }
-            }
-            audioRecorder.onBatchesFolderNotAccessible = {
-                scope.launch {
-                    showBatchesInaccessibleError = true
-
-                    runCatching {
-                        audioRecorder.stopRecording(context)
-                    }
-                    runCatching {
-                        audioRecorder.destroyService(context)
-                    }
-                }
-            }
-
-            onDispose {
-                audioRecorder.onRecordingSave = {
-                    throw NotImplementedError("onRecordingSave should not be called now")
-                }
-                audioRecorder.onError = {}
-            }
-        }
     }
 
     // Register video recorder events

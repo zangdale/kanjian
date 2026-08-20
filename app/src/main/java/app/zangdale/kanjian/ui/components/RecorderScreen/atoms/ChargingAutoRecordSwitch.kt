@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 fun ChargingAutoRecordSwitch(
     settings: AppSettings,
     modifier: Modifier = Modifier,
+    showDescription: Boolean = true,
 ) {
     val scope = rememberCoroutineScope()
     val dataStore = LocalContext.current.dataStore
@@ -36,11 +37,13 @@ fun ChargingAutoRecordSwitch(
                 }
             },
         )
-        Text(
-            text = stringResource(R.string.ui_recorder_option_autoRecordOnCharge_description),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 32.dp),
-        )
+        if (showDescription) {
+            Text(
+                text = stringResource(R.string.ui_recorder_option_autoRecordOnCharge_description),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 32.dp),
+            )
+        }
     }
 }

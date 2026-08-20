@@ -15,8 +15,6 @@
     <string name="ui_permissions_request_title">无法获取权限</string>
     <string name="ui_permissions_request">请授予权限以继续</string>
     <string name="ui_permissions_permanentlyDenied_message">您将被重定向到应用程序设置页面，在那里可以授予相关权限</string>
-    <string name="ui_audioRecorder_action_start_label">开始录制音频</string>
-    <string name="ui_audioRecorder_state_recording_title">录制中</string>
     <string name="ui_recorder_action_saveOldRecording_label">保存录制 <xliff:g name="date">%s</xliff:g></string>
     <string name="ui_recorder_action_delete_label">删除</string>
     <string name="ui_recorder_action_delete_confirm_title">删除录制？</string>
@@ -41,7 +39,7 @@
     <string name="ui_recorder_state_recording_fake_vpn_title">已连接至 VPN</string>
     <string name="ui_recorder_state_recording_fake_vpn_description">连接安全</string>
     <string name="ui_welcome_explanation_title">欢迎使用 Kanjian!</string>
-    <string name="ui_welcome_explanation_message">Kanjian就像你手机上的行车记录仪一样。它会持续进行录制，并按您的要求保存最近30分钟的录制文件。</string>
+    <string name="ui_welcome_explanation_message">Kanjian 相当于手机上的行车记录仪。它可以持续录制视频，并按需保存最近一段时间的内容。</string>
     <string name="ui_welcome_responsibility_title">您需要自行承担使用该应用程序所带来的风险和后果。</string>
     <string name="ui_welcome_responsibility_message">Kanjian不对该应用程序的使用负任何责任。您在使用时需自行承担使用风险。</string>
     <string name="ui_welcome_start_label">开始使用 Kanjian</string>
@@ -55,15 +53,7 @@
     <string name="ui_settings_option_maxDuration_value"><xliff:g name="count">%d</xliff:g> 个片段</string>
     <string name="ui_settings_option_intervalDuration_title">自动保存间隔</string>
     <string name="ui_settings_option_intervalDuration_description">每隔这段时间自动保存一次。达到最大片段数后，会覆盖最旧的片段。</string>
-    <string name="ui_settings_option_bitrate_title">比特率</string>
     <string name="ui_settings_option_bitrate_description">更高的比特率意味着更好的录制质量以及更大的储存空间占用</string>
-    <string name="ui_settings_option_bitrate_explanation">为音频录制设置比特率</string>
-    <string name="ui_settings_option_outputFormat_title">输出格式</string>
-    <string name="ui_settings_option_samplingRate_title">采样率</string>
-    <string name="ui_settings_option_samplingRate_description">定义每秒从音频信号中提取的采样数</string>
-    <string name="ui_settings_option_samplingRate_explanation">设置采样率</string>
-    <string name="ui_settings_option_encoder_title">编码器</string>
-    <string name="ui_settings_option_encoder_extra_outputFormatChanged">输出格式已更改，因为当前格式与此编码器不兼容</string>
     <string name="ui_settings_value_auto_label">自动</string>
     <string name="ui_recorder_state_paused_title">录制已暂停</string>
     <string name="ui_recorder_state_paused_description">Kanjian 已暂停</string>
@@ -71,15 +61,6 @@
     <string name="ui_recorder_error_recording_description">Kanjian 在录制过程中遇到错误。请尝试使用不同的设置或重启应用程序。</string>
     <string name="ui_settings_language_title">语言</string>
     <string name="ui_settings_language_update_label">更改</string>
-    <string name="ui_audioRecorder_info_microphone_deviceMicrophone">设备麦克风</string>
-    <string name="ui_audioRecorder_info_microphone_changeExplanation">选中的麦克风将立即激活</string>
-    <string name="ui_audioRecorder_error_microphoneDisconnected_title">麦克风连接已断开</string>
-    <string name="ui_audioRecorder_error_microphoneDisconnected_message"><xliff:g name="name">%s</xliff:g> 连接已断开。Kanjian 将使用默认麦克风。一旦重新连接，我们将自动重新切换到 <xliff:g name="nam">%s</xliff:g>。</string>
-    <string name="ui_audioRecorder_error_microphoneReconnected_title">麦克风已重新连接</string>
-    <string name="ui_audioRecorder_error_microphoneReconnected_message"><xliff:g name="name">%s</xliff:g> 已重新连接！Kanjian 已自动更改麦克风输入。</string>
-    <string name="ui_settings_option_showAllMicrophones_title">显示隐藏的麦克风</string>
-    <string name="ui_settings_option_showAllMicrophones_description">显示所有麦克风，包括内部麦克风</string>
-    <string name="ui_audioRecorder_info_microphone_hiddenMicrophones">隐藏麦克风</string>
     <string name="ui_settings_option_import_label">导入设置</string>
     <string name="ui_settings_option_export_label">导出设置</string>
     <string name="ui_settings_option_import_dialog_text">您确定要导入这些设置吗？您当前的设置将被覆盖！</string>
@@ -127,8 +108,6 @@
     <string name="ui_settings_option_saveFolder_warning_text">默认情况下，Kanjian 会将录制的片段文件保存到加密的内部存储中。您可以更改此文件夹并指定外部未加密的文件夹。这将允许您手动访问录制的片段。（闲着没事不要更改这个设置！）</string>
     <string name="ui_settings_option_saveFolder_warning_action_confirm">是的，更改文件夹</string>
     <string name="ui_settings_option_saveFolder_action_default_label">使用加密的内部存储</string>
-    <string name="ui_settings_sections_audio_title">音频录制</string>
-    <string name="ui_settings_sections_audio_description">仅适用于音频录制</string>
     <string name="ui_settings_sections_video_title">视频录制</string>
     <string name="ui_settings_sections_video_description">仅适用于视频录制</string>
     <string name="ui_settings_option_videoTargetedBitrate_title">目标比特率</string>
@@ -221,7 +200,7 @@
     <string name="ui_settings_option_saveFolder_openFolder_label">在文件管理器中打开选定的文件夹</string>
     <string name="ui_settings_option_saveFolder_explainMediaFolder_label">我录制的片段保存在哪里？</string>
     <string name="ui_settings_option_saveFolder_explainMediaFolder_generalExplanation">要查看您录制的片段，请打开文件管理应用程序，转到内部存储，然后您将在以下文件夹中找到您录制的片段文件：</string>
-    <string name="ui_settings_option_saveFolder_explainMediaFolder_subfoldersExplanation">最后合并的录制文件将保存到这些文件夹中。 每个录制件都创建一个子文件夹，将短片段存储在(\"%s\"用于录制音频，\"%s\"用于录制视频)。 要查看单个片段，您可能需要在文件管理应用中启用查看隐藏文件。</string>
+    <string name="ui_settings_option_saveFolder_explainMediaFolder_subfoldersExplanation">最后合并的录制文件将保存到这些文件夹中。每次录制会创建一个子文件夹存放短片段（\"%s\"）。要查看单个片段，可能需要在文件管理应用中启用查看隐藏文件。</string>
     <string name="ui_settings_option_saveFolder_explainMediaFolder_openFolderExplanation">点击文件夹在文件管理应用中打开</string>
     <string name="ui_videoRecorder_action_start_settings_cameraLens_unknown_label">未知</string>
     <string name="ui_settings_option_saveFolder_explainInternalFolder_explanation">为了保护您的隐私，Kanjian 将录制的片段存储到自己的私有加密存储中。 此存储仅供 Kanjian 访问，不能被其他应用或可能的入侵者访问。一旦您保存录制，您将被询问您想要将录制保存到哪里。</string>

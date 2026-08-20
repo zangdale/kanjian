@@ -89,22 +89,10 @@ data class RecorderNotificationHelper(
             .setChronometerCountDown(false)
     }
 
-    private fun getStringForRecorder(audioRes: Int, videoRes: Int): String =
-        when (context::class.java) {
-            AudioRecorderService::class.java -> context.getString(audioRes)
-
-            VideoRecorderService::class.java -> context.getString(videoRes)
-
-            else -> ""
-        }
-
     fun buildStartingNotification(): Notification {
         return createBaseNotification()
             .setContentTitle(
-                getStringForRecorder(
-                    R.string.ui_audioRecorder_state_recording_title,
-                    R.string.ui_videoRecorder_state_recording_title,
-                )
+                context.getString(R.string.ui_videoRecorder_state_recording_title)
             )
             .setContentText(context.getString(R.string.ui_recorder_state_recording_description))
             .build()
@@ -130,10 +118,7 @@ data class RecorderNotificationHelper(
             )
             .setContentTitle(
                 details?.title
-                    ?: getStringForRecorder(
-                        R.string.ui_audioRecorder_state_recording_title,
-                        R.string.ui_videoRecorder_state_recording_title,
-                    )
+                    ?: context.getString(R.string.ui_videoRecorder_state_recording_title)
             )
             .setContentText(
                 details?.description

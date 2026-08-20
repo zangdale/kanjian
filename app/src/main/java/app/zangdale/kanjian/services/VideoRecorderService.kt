@@ -493,7 +493,6 @@ class VideoRecorderService :
             batchesAmount = batchesFolder.getBatchesForFFmpeg().size,
             fileExtension = settings.videoRecorderSettings.fileExtension,
             intervalDuration = settings.intervalDuration,
-            type = RecordingInformation.Type.VIDEO,
             watermarkLatitude = locationTracker?.lastLocation?.latitude,
             watermarkLongitude = locationTracker?.lastLocation?.longitude,
         )
